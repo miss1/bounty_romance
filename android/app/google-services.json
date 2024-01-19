@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "735539035493",
+    "project_id": "bounty-romance",
+    "storage_bucket": "bounty-romance.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:735539035493:android:f643391ab621b7e264f58c",
+        "android_client_info": {
+          "package_name": "com.example.bounty_romance"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbIfuCnu1qmUHGTDpJKT6VmJCuUYJlb8Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
