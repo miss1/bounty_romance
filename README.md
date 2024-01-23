@@ -7,5 +7,7 @@ CPSC 5250 team project
 This project is a starting point for a Flutter application.
 
 ## Firebase
-https://console.firebase.google.com/project/bounty-romance/overview
+
+Console: https://console.firebase.google.com/project/bounty-romance/overview
+Documentation: https://firebase.google.com/docs/build
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './registration_page.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key, required this.title});
@@ -34,6 +35,11 @@ class _LoginState extends State<Login> {
 
   void signupFn() {
     // call api here
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const RegistrationPage(),
+      ),
+    );
   }
 
   void attemptLogin() {
