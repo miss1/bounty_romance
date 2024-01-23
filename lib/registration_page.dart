@@ -54,7 +54,12 @@ class _MyLoginPageState extends State<Registration> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(
+              context,
+              rootNavigator: true,
+            ).pop(
+              context,
+            );
           },
         ),
       ),
