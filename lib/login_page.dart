@@ -1,17 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'registration_page.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -23,6 +15,7 @@ class _LoginState extends State<Login> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+  String loginErrorMsg = '';
 
   void loginFn() {
     if(_formKey.currentState?.validate() ?? false) {
@@ -32,7 +25,6 @@ class _LoginState extends State<Login> {
   }
 
   void signupFn() {
-    // call api here
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => const RegistrationPage(),
@@ -49,138 +41,117 @@ class _LoginState extends State<Login> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Center(
-            child: Form(
-              key: _formKey,
+      body: Column(
+        children: [
+          Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  // username area
-                  Text(
-                      'username', style: Theme.of(context).textTheme.headlineMedium
-                  ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                    child: TextFormField(
-                      controller: usernameController,
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        hintText: 'Enter your username here',
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.clear),
-                          onPressed: () {
-                            // clear the text box
-                            usernameController.clear();
-                          },
-                        ),
-                      ),
-                      validator: (newValue) {
-                        if(newValue == null || newValue.isEmpty) {
-                          return 'username must not be blank!';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-
-                  // add 20px spacing
-                  SizedBox(
-                    height: 20,
-                  ),
-
-                  // password area
-                  Text(
-                      'password', style: Theme.of(context).textTheme.headlineMedium
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                    child: TextFormField(
-                      controller: passwordController,
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        hintText: 'Enter your password here',
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.clear),
-                          onPressed: () {
-                            // clear the text box
-                            passwordController.clear();
-                          },
-                        ),
-                      ),
-                      validator: (newValue) {
-                        if(newValue == null || newValue.isEmpty) {
-                          return 'password must not be blank!';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-
-                  // add 20px spacing
-                  SizedBox(
-                    height: 20,
-                  ),
-
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 20,
-                      ),
-
-                      // this is the login button
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0)
-                          ),
-                          fixedSize: const Size(150, 20),
-                        ),
-                        onPressed: loginFn,
-                        child: const Text(
-                          "login",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25,
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(
-                        width: 20,
-                      ),
-
-                      // this is the signup button
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0)
-                          ),
-                          fixedSize: const Size(150, 20),
-                        ),
-                        onPressed: signupFn,
-                        child: const Text(
-                          "sign up",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25,
-                          ),
-                        ),
+                      padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+                      child: Center(
+                        child: Text('Hello!', style: Theme.of(context).textTheme.headlineMedium),
                       )
-                    ],
+                  ),
+                  const Padding(
+                      padding: EdgeInsets.only(top: 0.0, bottom: 25.0),
+                      child: Center(
+                        child: Text('Sign in to your account', style: TextStyle(fontSize: 14.0,)),
+                      )
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      hintText: 'Email',
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          usernameController.clear();
+                        },
+                      ),
+                    ),
+                    controller: usernameController,
+                    validator: (String? value) {
+                      String emailPattern = r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
+                      RegExp regExp = RegExp(emailPattern);
+                      if (value == null || value.isEmpty || !regExp.hasMatch(value)) {
+                        return 'Please enter a valid email';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      hintText: 'Password',
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          passwordController.clear();
+                        },
+                      ),
+                    ),
+                    obscureText: true,
+                    controller: passwordController,
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty || value.length < 6) {
+                        return 'Password should be at least 6 characters';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 30),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _formKey.currentState!.save();
+                          // registerUser(_emailController.text, _passwordController.text);
+                        }
+                      },
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                        ),
+                        backgroundColor: MaterialStateProperty.all(Colors.blue),
+                        padding: MaterialStateProperty.all(
+                          const EdgeInsets.symmetric(vertical: 15.0, horizontal: 45.0),
+                        ),
+                      ),
+                      child: const Text('Sign in', style: TextStyle(fontSize: 16.0, color: Colors.white)),
+                    ),
+                  ),
+                  Center(
+                    child: Text(loginErrorMsg, style: const TextStyle(fontSize: 16.0, color: Colors.red)),
                   ),
                 ],
               ),
-            )
+            ),
           ),
-        ),
+          const Spacer(),
+          Container(
+            height: 100,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Don`t have an account? ', style: TextStyle(fontSize: 14.0)),
+                  GestureDetector(
+                    onTap: () {
+                      signupFn();
+                    },
+                    child: const Text('Sign up', style: TextStyle(fontSize: 14.0, color: Colors.blue)),
+                  )
+                ]
+            )
+          )
+        ]
       ),
     );
   }
