@@ -31,6 +31,7 @@ class _MyLoginPageState extends State<Registration> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  String errorMsg = "";
 
   Future<void> registerUser(String email, String password) async {
     FirebaseAuth auth = FirebaseAuth.instance;
@@ -41,6 +42,9 @@ class _MyLoginPageState extends State<Registration> {
       );
       print('User created: ${userCredential.user!.uid}');
     } catch (e) {
+      setState(() {
+        errorMsg = e.toString();
+      });
       print('Error creating user: $e');
     }
   }
@@ -106,6 +110,8 @@ class _MyLoginPageState extends State<Registration> {
                 child: const Text('Submit'),
               ),
             ),
+            if (errorMsg != "")
+              Text(errorMsg, style: const TextStyle(color: Colors.red, fontSize: 20)),
           ],
         ),
       ),
