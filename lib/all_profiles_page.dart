@@ -25,6 +25,30 @@ class _AllProfilesPageState extends State<AllProfilesPage> {
                 height: 230,
                 child: Stack(
                   children: [
+                    Positioned(
+                        child: Material(
+                          child: Container(
+                            height: 180,
+                            width: 300,
+                            decoration: BoxDecoration(
+                              color: Colors.amber,
+                              borderRadius: BorderRadius.circular(0.0),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.grey,
+                                  offset: Offset(
+                                    5.0,
+                                    5.0,
+                                  ),
+                                  blurRadius: 10.0,
+                                  spreadRadius: 2.0,
+                                ), //BoxShadow//BoxShadow
+                              ],
+                            ),
+                          ),
+
+                        )
+                    ),
                     Container(
                       height: 200,
                       width: 200,
