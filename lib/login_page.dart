@@ -20,17 +20,21 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   String? loginInput;
   String? pwInput;
 
   void loginFn() {
-    setState(() {
-      loginInput = usernameController.text;
-      pwInput = passwordController.text;
-    });
-    attemptLogin();
+    if(_formKey.currentState?.validate() ?? false) {
+      setState(() {
+        loginInput = usernameController.text;
+        pwInput = passwordController.text;
+      });
+      attemptLogin();
+      _formKey.currentState!.reset();
+    }
   }
 
   void signupFn() {
@@ -58,115 +62,129 @@ class _LoginState extends State<Login> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                // username area
-                Text(
-                    'username', style: Theme.of(context).textTheme.headlineMedium
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                  child: TextFormField(
-                    controller: usernameController,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      hintText: 'Enter your username here',
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          // clear the text box
-                          usernameController.clear();
-                        },
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  // username area
+                  Text(
+                      'username', style: Theme.of(context).textTheme.headlineMedium
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    child: TextFormField(
+                      controller: usernameController,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        hintText: 'Enter your username here',
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            // clear the text box
+                            usernameController.clear();
+                          },
+                        ),
                       ),
+                      validator: (newValue) {
+                        if(newValue == null || newValue.isEmpty) {
+                          return 'username must not be blank!';
+                        }
+                        return null;
+                      },
                     ),
                   ),
-                ),
 
-                // add 20px spacing
-                SizedBox(
-                  height: 20,
-                ),
+                  // add 20px spacing
+                  SizedBox(
+                    height: 20,
+                  ),
 
-                // password area
-                Text(
-                    'password', style: Theme.of(context).textTheme.headlineMedium
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                  child:
-                  TextFormField(
-                    controller: passwordController,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      hintText: 'Enter your password here',
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          // clear the text box
-                          passwordController.clear();
-                        },
+                  // password area
+                  Text(
+                      'password', style: Theme.of(context).textTheme.headlineMedium
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    child: TextFormField(
+                      controller: passwordController,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        hintText: 'Enter your password here',
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            // clear the text box
+                            passwordController.clear();
+                          },
+                        ),
                       ),
+                      validator: (newValue) {
+                        if(newValue == null || newValue.isEmpty) {
+                          return 'password must not be blank!';
+                        }
+                        return null;
+                      },
                     ),
                   ),
-                ),
 
-                // add 20px spacing
-                SizedBox(
-                  height: 20,
-                ),
+                  // add 20px spacing
+                  SizedBox(
+                    height: 20,
+                  ),
 
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 20,
-                    ),
-
-                    // this is the login button
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0)
-                        ),
-                        fixedSize: const Size(150, 20),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 20,
                       ),
-                      onPressed: loginFn,
-                      child: const Text(
-                        "login",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25,
-                        ),
-                      ),
-                    ),
 
-                    SizedBox(
-                      width: 20,
-                    ),
-
-                    // this is the signup button
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0)
+                      // this is the login button
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0)
+                          ),
+                          fixedSize: const Size(150, 20),
                         ),
-                        fixedSize: const Size(150, 20),
-                      ),
-                      onPressed: signupFn,
-                      child: const Text(
-                        "sign up",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25,
+                        onPressed: loginFn,
+                        child: const Text(
+                          "login",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25,
+                          ),
                         ),
                       ),
-                    )
-                  ],
-                ),
-              ],
-            ),
+
+                      SizedBox(
+                        width: 20,
+                      ),
+
+                      // this is the signup button
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0)
+                          ),
+                          fixedSize: const Size(150, 20),
+                        ),
+                        onPressed: signupFn,
+                        child: const Text(
+                          "sign up",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            )
           ),
         ),
       ),
