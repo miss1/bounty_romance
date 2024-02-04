@@ -27,7 +27,7 @@ class _AllProfilesPageState extends State<AllProfilesPage> {
                   children: [
                     Container(
                       height: 200,
-                      width: 150,
+                      width: 200,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
                         image: const DecorationImage(
