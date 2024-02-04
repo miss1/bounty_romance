@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'all_profiles_page.dart';
 import 'firebase_options.dart';
 import './login_page.dart';
 
@@ -23,7 +24,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Login(title: 'Bounty Romance'),
+      //home: const Login(title: 'Bounty Romance'),
+      home: const AllProfilesPage(),
     );
   }
 }
