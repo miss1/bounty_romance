@@ -1,3 +1,4 @@
+import 'package:bounty_romance/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -41,6 +42,12 @@ class _MyLoginPageState extends State<Registration> {
         password: password,
       );
       print('User created: ${userCredential.user!.uid}');
+      // call api here to reroute
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const Login(title: 'Bounty Romance'),
+        ),
+      );
     } catch (e) {
       setState(() {
         errorMsg = e.toString();
