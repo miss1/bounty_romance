@@ -23,15 +23,9 @@ class _LoginState extends State<Login> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
-  String? loginInput;
-  String? pwInput;
 
   void loginFn() {
     if(_formKey.currentState?.validate() ?? false) {
-      setState(() {
-        loginInput = usernameController.text;
-        pwInput = passwordController.text;
-      });
       attemptLogin();
       _formKey.currentState!.reset();
     }
