@@ -67,7 +67,7 @@ class _LoginState extends State<Login> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                  child: TextField(
+                  child: TextFormField(
                     controller: usernameController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
@@ -96,7 +96,7 @@ class _LoginState extends State<Login> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                   child:
-                  TextField(
+                  TextFormField(
                     controller: passwordController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
