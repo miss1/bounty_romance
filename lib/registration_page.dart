@@ -79,89 +79,110 @@ class _RegistrationState extends State<Registration> {
           },
         ),
       ),
-      body: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: Center(
-                  child: Text('Registration', style: Theme.of(context).textTheme.headlineMedium),
-                )
-              ),
-              const Padding(
-                padding: EdgeInsets.only(top: 10.0, bottom: 5.0),
-                child: Text('Email', style: TextStyle(fontSize: 18.0,)),
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'Enter your email',
-                  border: const OutlineInputBorder(),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: () {
-                      _emailController.clear();
+      body: Column(
+        children: [
+          Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
+                      child: Center(
+                        child: Text('Sign up', style: Theme.of(context).textTheme.headlineMedium),
+                      )
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      hintText: 'Enter your email',
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          _emailController.clear();
+                        },
+                      ),
+                    ),
+                    controller: _emailController,
+                    validator: (String? value) {
+                      String emailPattern = r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
+                      RegExp regExp = RegExp(emailPattern);
+                      if (value == null || value.isEmpty || !regExp.hasMatch(value)) {
+                        return 'Please enter a valid email';
+                      }
+                      return null;
                     },
                   ),
-                ),
-                controller: _emailController,
-                validator: (String? value) {
-                  String emailPattern = r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
-                  RegExp regExp = RegExp(emailPattern);
-                  if (value == null || value.isEmpty || !regExp.hasMatch(value)) {
-                    return 'Please enter a valid email';
-                  }
-                  return null;
-                },
-              ),
-              const Padding(
-                padding: EdgeInsets.only(top: 10.0, bottom: 5.0),
-                child: Text('Password', style: TextStyle(fontSize: 18.0,)),
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'Enter your password',
-                  border: const OutlineInputBorder(),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: () {
-                      _passwordController.clear();
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      hintText: 'Enter your password',
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          _passwordController.clear();
+                        },
+                      ),
+                    ),
+                    obscureText: true,
+                    controller: _passwordController,
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty || value.length < 6) {
+                        return 'Password should be at least 6 characters';
+                      }
+                      return null;
                     },
                   ),
-                ),
-                obscureText: true,
-                controller: _passwordController,
-                validator: (String? value) {
-                  if (value == null || value.isEmpty || value.length < 6) {
-                    return 'Password should be at least 6 characters';
-                  }
-                  return null;
-                },
+                  const SizedBox(height: 30),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _formKey.currentState!.save();
+                          registerUser(_emailController.text, _passwordController.text);
+                        }
+                      },
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                        ),
+                        backgroundColor: MaterialStateProperty.all(Colors.blue),
+                        padding: MaterialStateProperty.all(
+                          const EdgeInsets.symmetric(vertical: 15.0, horizontal: 45.0),
+                        ),
+                      ),
+                      child: const Text('Sign up', style: TextStyle(fontSize: 16.0, color: Colors.white)),
+                    ),
+                  ),
+                  Center(
+                    child: Text(registerErrorMsg, style: const TextStyle(fontSize: 16.0, color: Colors.red)),
+                  )
+                ],
               ),
-              const SizedBox(height: 20),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-                      registerUser(_emailController.text, _passwordController.text);
-                    }
-                  },
-                  child: const Text('Submit'),
-                ),
-              ),
-              Center(
-                child: Text(registerErrorMsg, style: const TextStyle(fontSize: 16.0, color: Colors.red)),
-              )
-            ],
+            ),
           ),
-        ),
-      ),
+          const Spacer(),
+          Container(
+              height: 100,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Already have an account? ', style: TextStyle(fontSize: 14.0)),
+                    GestureDetector(
+                      onTap: () {
+                        navigateToLogin();
+                      },
+                      child: const Text('Sign in', style: TextStyle(fontSize: 14.0, color: Colors.blue)),
+                    )
+                  ]
+              )
+          )
+        ]
+      )
     );
   }
 }
