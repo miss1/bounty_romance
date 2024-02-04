@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'registration_page.dart';
+import 'all_profiles_page.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key, required this.title});
@@ -17,13 +18,6 @@ class _LoginState extends State<Login> {
   final passwordController = TextEditingController();
   String loginErrorMsg = '';
 
-  void loginFn() {
-    if(_formKey.currentState?.validate() ?? false) {
-      attemptLogin();
-      _formKey.currentState!.reset();
-    }
-  }
-
   void signupFn() {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -32,8 +26,31 @@ class _LoginState extends State<Login> {
     );
   }
 
-  void attemptLogin() {
-    // this where you call the api from Firebase
+  void navigateToHome() {
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const AllProfilesPage()));
+  }
+
+  Future<void> loginFn(String email, String password) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password
+      );
+      setState(() {loginErrorMsg = '';});
+      usernameController.clear();
+      passwordController.clear();
+      navigateToHome();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        setState(() {loginErrorMsg = 'No user found for that email.';});
+      } else if (e.code == 'wrong-password') {
+        setState(() {loginErrorMsg = 'Wrong password provided for that user.';});
+      } else {
+        setState(() {loginErrorMsg = 'Login failed';});
+        await FirebaseAuth.instance.signOut();
+      }
+    }
   }
 
   @override
@@ -111,7 +128,7 @@ class _LoginState extends State<Login> {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
-                          // registerUser(_emailController.text, _passwordController.text);
+                          loginFn(usernameController.text, passwordController.text);
                         }
                       },
                       style: ButtonStyle(
