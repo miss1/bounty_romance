@@ -15,6 +15,8 @@ class _AllProfilesPageState extends State<AllProfilesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width; //to get the width of screen
+    final double height = MediaQuery.of(context).size.height; //to get height of screen
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -22,14 +24,15 @@ class _AllProfilesPageState extends State<AllProfilesPage> {
           child: Column(
             children: [
               Container(
-                height: 230,
+                alignment: Alignment.topCenter,
+                height: height * 0.45,
                 child: Stack(
                   children: [
                     Positioned(
                         child: Material(
                           child: Container(
-                            height: 180,
-                            width: 300,
+                            height: height*0.4,
+                            width: width*0.95,
                             decoration: BoxDecoration(
                               color: Colors.amber,
                               borderRadius: BorderRadius.circular(0.0),
