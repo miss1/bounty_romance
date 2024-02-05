@@ -89,6 +89,7 @@ class _RegistrationState extends State<Registration> {
           },
         ),
       ),
+      resizeToAvoidBottomInset: false,
       body: Column(
         children: [
           Form(
