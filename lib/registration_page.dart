@@ -80,12 +80,11 @@ class _RegistrationState extends State<Registration> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.of(
-              context,
-              rootNavigator: true,
-            ).pop(
-              context,
-            );
+            if (Navigator.of(context, rootNavigator: true).canPop()) {
+              Navigator.of(context, rootNavigator: true).pop(context);
+            } else {
+              navigateToLogin();
+            }
           },
         ),
       ),
