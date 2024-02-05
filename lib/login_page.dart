@@ -84,69 +84,79 @@ class _LoginState extends State<Login> {
                             )
                         ),
                         const SizedBox(height: 20),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            hintText: 'Email',
-                            suffixIcon: IconButton(
-                              icon: const Icon(Icons.clear),
-                              onPressed: () {
-                                usernameController.clear();
-                              },
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              hintText: 'Email',
+                              suffixIcon: IconButton(
+                                icon: const Icon(Icons.clear),
+                                onPressed: () {
+                                  usernameController.clear();
+                                },
+                              ),
                             ),
-                          ),
-                          controller: usernameController,
-                          validator: (String? value) {
-                            String emailPattern = r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
-                            RegExp regExp = RegExp(emailPattern);
-                            if (value == null || value.isEmpty || !regExp.hasMatch(value)) {
-                              return 'Please enter a valid email';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 20),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            hintText: 'Password',
-                            suffixIcon: IconButton(
-                              icon: const Icon(Icons.clear),
-                              onPressed: () {
-                                passwordController.clear();
-                              },
-                            ),
-                          ),
-                          obscureText: true,
-                          controller: passwordController,
-                          validator: (String? value) {
-                            if (value == null || value.isEmpty || value.length < 6) {
-                              return 'Password should be at least 6 characters';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 30),
-                        Center(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                _formKey.currentState!.save();
-                                loginFn(usernameController.text, passwordController.text);
+                            controller: usernameController,
+                            validator: (String? value) {
+                              String emailPattern = r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
+                              RegExp regExp = RegExp(emailPattern);
+                              if (value == null || value.isEmpty || !regExp.hasMatch(value)) {
+                                return 'Please enter a valid email';
                               }
+                              return null;
                             },
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
+                          ),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              hintText: 'Password',
+                              suffixIcon: IconButton(
+                                icon: const Icon(Icons.clear),
+                                onPressed: () {
+                                  passwordController.clear();
+                                },
+                              ),
+                            ),
+                            obscureText: true,
+                            controller: passwordController,
+                            validator: (String? value) {
+                              if (value == null || value.isEmpty || value.length < 6) {
+                                return 'Password should be at least 6 characters';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+                          child: Center(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  _formKey.currentState!.save();
+                                  loginFn(usernameController.text, passwordController.text);
+                                }
+                              },
+                              style: ButtonStyle(
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                ),
+                                backgroundColor: MaterialStateProperty.all(Colors.blue),
+                                padding: MaterialStateProperty.all(
+                                  const EdgeInsets.symmetric(vertical: 15.0, horizontal: 45.0),
                                 ),
                               ),
-                              backgroundColor: MaterialStateProperty.all(Colors.blue),
-                              padding: MaterialStateProperty.all(
-                                const EdgeInsets.symmetric(vertical: 15.0, horizontal: 45.0),
-                              ),
+                              child: const Text('Sign in', style: TextStyle(fontSize: 16.0, color: Colors.white)),
                             ),
-                            child: const Text('Sign in', style: TextStyle(fontSize: 16.0, color: Colors.white)),
                           ),
                         ),
+
                         Center(
                           child: Text(loginErrorMsg, style: const TextStyle(fontSize: 16.0, color: Colors.red)),
                         ),
