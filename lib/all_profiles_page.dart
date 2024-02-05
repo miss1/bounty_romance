@@ -31,6 +31,7 @@ class AllProfiles extends StatefulWidget {
 
 class _AllProfilesState extends State<AllProfiles> {
   List<Map<String, dynamic>> userList = [];
+  bool filledSelected = false;
 
   @override
   void initState() {
@@ -83,9 +84,14 @@ class _AllProfilesState extends State<AllProfiles> {
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: IconButton(
-                        icon: const Icon(Icons.add),
+                        isSelected: filledSelected,
+                        icon: const Icon(Icons.favorite_border, color: Colors.pink,),
+                        selectedIcon: const Icon(Icons.favorite, color: Colors.pink,),
                         onPressed: () {
                           print("send like request");
+                          setState(() {
+                            filledSelected = !filledSelected;
+                          });
                         },
                       ),
                     ),
