@@ -76,7 +76,7 @@ class _AllProfilesState extends State<AllProfiles> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: Image.asset('assets/default.jpg', width: 60, height: 60),
+                    child: Image.asset('assets/default.jpg', width: 250, height: 250),
                   ),
                   Text(userList[index]['name'], style: const TextStyle(fontSize: 18)),
                   Expanded(
