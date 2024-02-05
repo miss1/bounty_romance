@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login_page.dart';
 import 'db.dart';
+import 'package:email_validator/email_validator.dart';
 
 class RegistrationPage extends StatelessWidget {
   const RegistrationPage({super.key});
@@ -135,9 +136,7 @@ class _RegistrationState extends State<Registration> {
                     ),
                     controller: _emailController,
                     validator: (String? value) {
-                      String emailPattern = r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
-                      RegExp regExp = RegExp(emailPattern);
-                      if (value == null || value.isEmpty || !regExp.hasMatch(value)) {
+                      if (value == null || value.isEmpty || !EmailValidator.validate(value)) {
                         return 'Please enter a valid email';
                       }
                       return null;
