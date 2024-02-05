@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login_page.dart';
+import 'db.dart';
 
 class RegistrationPage extends StatelessWidget {
   const RegistrationPage({super.key});
@@ -32,19 +33,28 @@ class _RegistrationState extends State<Registration> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   String registerErrorMsg = '';
 
   void navigateToLogin() {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Login(title: 'Bounty Romance')));
   }
 
-  Future<void> registerUser(String email, String password) async {
+  Future<void> registerUser(String email, String password, String name) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     try {
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      final user = <String, dynamic>{
+        "id": userCredential.user!.uid,
+        "name": name,
+        "email": email
+      };
+      await FireStoreService.createUser(user);
+
       setState(() {registerErrorMsg = '';});
       _emailController.clear();
       _passwordController.clear();
@@ -97,6 +107,25 @@ class _RegistrationState extends State<Registration> {
                   const SizedBox(height: 20),
                   TextFormField(
                     decoration: InputDecoration(
+                      hintText: 'Enter your nickname',
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          _nameController.clear();
+                        },
+                      ),
+                    ),
+                    controller: _nameController,
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Nickname can not be null';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    decoration: InputDecoration(
                       hintText: 'Enter your email',
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.clear),
@@ -141,7 +170,7 @@ class _RegistrationState extends State<Registration> {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
-                          registerUser(_emailController.text, _passwordController.text);
+                          registerUser(_emailController.text, _passwordController.text, _nameController.text);
                         }
                       },
                       style: ButtonStyle(
