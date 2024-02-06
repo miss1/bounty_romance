@@ -60,6 +60,21 @@ void main() {
     expect(find.text('Password should be at least 6 characters'), findsOneWidget);
   });
 
+  testWidgets('login page: click signup', (WidgetTester tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Login(title: 'Bounty Romance'),
+    ));
+    expect(find.byType(Login), findsOneWidget);
+
+    expect(find.byType(RegistrationPage), findsNothing);
+    Finder signup = find.text('Sign up');
+    expect(signup, findsOneWidget);
+
+    await tester.tap(signup);
+    await tester.pumpAndSettle();
+    expect(find.byType(RegistrationPage), findsOneWidget);
+  });
+
   testWidgets('registration page: tap clear icon', (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(
       home: RegistrationPage(),
@@ -117,5 +132,20 @@ void main() {
     expect(find.text('Nickname can not be null'), findsOneWidget);
     expect(find.text('Please enter a valid email'), findsOneWidget);
     expect(find.text('Password should be at least 6 characters'), findsOneWidget);
+  });
+
+  testWidgets('registration page: click sign in', (WidgetTester tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: RegistrationPage(),
+    ));
+    expect(find.byType(RegistrationPage), findsOneWidget);
+
+    expect(find.byType(Login), findsNothing);
+    Finder signIn = find.text('Sign in');
+    expect(signIn, findsOneWidget);
+
+    await tester.tap(signIn);
+    await tester.pumpAndSettle();
+    expect(find.byType(Login), findsOneWidget);
   });
 }
