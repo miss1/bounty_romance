@@ -107,6 +107,7 @@ class _RegistrationState extends State<Registration> {
                   ),
                   const SizedBox(height: 20),
                   TextFormField(
+                    key: const Key('nickname'),
                     decoration: InputDecoration(
                       hintText: 'Enter your nickname',
                       suffixIcon: IconButton(
@@ -126,6 +127,7 @@ class _RegistrationState extends State<Registration> {
                   ),
                   const SizedBox(height: 20),
                   TextFormField(
+                    key: const Key('email'),
                     decoration: InputDecoration(
                       hintText: 'Enter your email',
                       suffixIcon: IconButton(
@@ -145,6 +147,7 @@ class _RegistrationState extends State<Registration> {
                   ),
                   const SizedBox(height: 20),
                   TextFormField(
+                    key: const Key('password'),
                     decoration: InputDecoration(
                       hintText: 'Enter your password',
                       suffixIcon: IconButton(
@@ -193,9 +196,8 @@ class _RegistrationState extends State<Registration> {
               ),
             ),
           ),
-          const Spacer(),
           Container(
-              height: 100,
+              height: 50,
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
