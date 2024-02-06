@@ -38,7 +38,11 @@ class _RegistrationState extends State<Registration> {
   String registerErrorMsg = '';
 
   void navigateToLogin() {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Login(title: 'Bounty Romance')));
+    if (Navigator.of(context, rootNavigator: true).canPop()) {
+      Navigator.of(context, rootNavigator: true).pop(context);
+    } else {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Login(title: 'Bounty Romance')));
+    }
   }
 
   Future<void> registerUser(String email, String password, String name) async {
@@ -81,11 +85,7 @@ class _RegistrationState extends State<Registration> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            if (Navigator.of(context, rootNavigator: true).canPop()) {
-              Navigator.of(context, rootNavigator: true).pop(context);
-            } else {
-              navigateToLogin();
-            }
+            navigateToLogin();
           },
         ),
       ),
