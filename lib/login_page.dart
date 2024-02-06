@@ -87,6 +87,7 @@ class _LoginState extends State<Login> {
                         Padding(
                           padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
                           child: TextFormField(
+                            key: const Key('email'),
                             decoration: InputDecoration(
                               hintText: 'Email',
                               suffixIcon: IconButton(
@@ -111,6 +112,7 @@ class _LoginState extends State<Login> {
                         Padding(
                           padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
                           child: TextFormField(
+                            key: const Key('password'),
                             decoration: InputDecoration(
                               hintText: 'Password',
                               suffixIcon: IconButton(

@@ -14,6 +14,52 @@ void main() {
     expect(find.byType(Login), findsOneWidget);
   });
 
+  testWidgets('login page: tap clear icon', (WidgetTester tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Login(title: 'Bounty Romance'),
+    ));
+    expect(find.byType(Login), findsOneWidget);
+
+    // test email filed: tap clear icon
+    await tester.enterText(find.byKey(const Key('email')), 'Hello');
+    expect(find.text('Hello'), findsOneWidget);
+    await tester.tap(find.descendant(
+      of: find.byKey(const Key('email')),
+      matching: find.byIcon(Icons.clear),
+    ));
+    await tester.pump();
+    expect(find.text('Hello'), findsNothing);
+
+    // test email filed: tap clear icon
+    await tester.enterText(find.byKey(const Key('password')), 'Hello');
+    expect(find.text('Hello'), findsOneWidget);
+    await tester.tap(find.descendant(
+      of: find.byKey(const Key('password')),
+      matching: find.byIcon(Icons.clear),
+    ));
+    await tester.pump();
+    expect(find.text('Hello'), findsNothing);
+  });
+
+  testWidgets('login page: form validation', (WidgetTester tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: Login(title: 'Bounty Romance'),
+    ));
+    expect(find.byType(Login), findsOneWidget);
+
+    await tester.enterText(find.byKey(const Key('email')), 'Hello');
+    await tester.enterText(find.byKey(const Key('password')), '123a');
+
+    expect(find.text('Please enter a valid email'), findsNothing);
+    expect(find.text('Password should be at least 6 characters'), findsNothing);
+
+    await tester.tap(find.byType(ElevatedButton));
+    await tester.pump();
+
+    expect(find.text('Please enter a valid email'), findsOneWidget);
+    expect(find.text('Password should be at least 6 characters'), findsOneWidget);
+  });
+
   testWidgets('registration page: tap clear icon', (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(
       home: RegistrationPage(),
