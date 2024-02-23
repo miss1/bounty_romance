@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login_page.dart';
@@ -67,6 +68,18 @@ class _RegistrationState extends State<Registration> {
         print('No image selected.');
       }
     });
+  }
+
+  Future<void> uploadImageToFirebase() async {
+    try {
+      if (image != null) {
+        Reference firebaseStorageRef = FirebaseStorage.instance.ref().child('images/${DateTime.now()}.png');
+        UploadTask uploadTask = firebaseStorageRef.putFile(image!);
+        await uploadTask.whenComplete(() => print('Image uploaded to Firebase Storage'));
+      }
+    } catch (e) {
+      print('Error uploading image to Firebase Storage: $e');
+    }
   }
 
   void navigateToLogin() {
