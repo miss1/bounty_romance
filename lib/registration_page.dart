@@ -37,8 +37,13 @@ class _RegistrationState extends State<Registration> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
+  final TextEditingController _introController = TextEditingController();
+  final List<String> genders = ['man', 'woman', 'others'];
+  final List<bool> selectedGender = <bool>[true, false, false];
   String registerErrorMsg = '';
   File? image;
+  int genderIdx = 0;
 
   Future<void> getImageFromGallery() async {
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -124,7 +129,7 @@ class _RegistrationState extends State<Registration> {
           },
         ),
       ),
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -203,7 +208,113 @@ class _RegistrationState extends State<Registration> {
                             return null;
                           },
                         ),
+                        const SizedBox(height: 20),
+
+                        // age input
+                        TextFormField(
+                          key: const Key('ageTextInput'),
+                          decoration: InputDecoration(
+                            hintText: 'Enter your age',
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                _ageController.clear();
+                              },
+                            ),
+                          ),
+                          controller: _ageController,
+                          validator: (String? value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Age can not be null';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+
+                        // intro input
+                        TextFormField(
+                          key: const Key('introTextInput'),
+                          decoration: InputDecoration(
+                            hintText: 'Enter your intro',
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                _introController.clear();
+                              },
+                            ),
+                          ),
+                          controller: _introController,
+                          validator: (String? value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Intro can not be null';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+
+                        // gender input
+                        Center(
+                          child: ToggleButtons(
+                            direction: Axis.horizontal,
+                            constraints: const BoxConstraints(
+                              minHeight: 40.0,
+                              minWidth: 80.0,
+                            ),
+                            fillColor: Colors.green,
+                            selectedBorderColor: Colors.black87,
+                            borderRadius: const BorderRadius.all(Radius.circular(8)),
+                            isSelected: selectedGender,
+                            onPressed: (int index) {
+                              setState(() {
+                                genderIdx = index; // update the state
+                                print('selected gender idx = $genderIdx');
+                                // The button that is tapped is set to true, and the others to false.
+                                for (int i = 0; i < selectedGender.length; i++) {
+                                  if (i == index) {
+                                    selectedGender[i] = true;
+                                  } else {
+                                    selectedGender[i] = false;
+                                  }
+                                }
+                              });
+                            },
+                            children: const [
+                              Text('man'),
+                              Text('woman'),
+                              Text('others'),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+
+                        // upload image
+                        Center(
+                          child: Column(
+                            children: [
+                              imageWidget,
+                              Wrap(
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: takePicture,
+                                    child: const Text('Take an Image'),
+                                  ),
+                                  const SizedBox(
+                                    width: 8,
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: getImageFromGallery,
+                                    child: const Text('Select Image'),
+                                  ),
+                                ],
+                              ),
+
+                            ],
+                          ),
+                        ),
                         const SizedBox(height: 30),
+
                         Center(
                           child: ElevatedButton(
                             onPressed: () {
@@ -228,19 +339,6 @@ class _RegistrationState extends State<Registration> {
                         ),
                         Center(
                           child: Text(registerErrorMsg, style: const TextStyle(fontSize: 16.0, color: Colors.red)),
-                        ),
-
-                        // upload image
-                        Center(
-                          child: Column(
-                            children: [
-                              imageWidget,
-                              ElevatedButton(
-                                onPressed: getImageFromGallery,
-                                child: Text('Select Image'),
-                              ),
-                            ],
-                          ),
                         ),
                       ],
                     ),
