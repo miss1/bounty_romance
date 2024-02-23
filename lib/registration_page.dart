@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login_page.dart';
 import 'db.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:image_picker/image_picker.dart';
 
 class RegistrationPage extends StatelessWidget {
   const RegistrationPage({super.key});
@@ -36,6 +38,31 @@ class _RegistrationState extends State<Registration> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   String registerErrorMsg = '';
+  File? image;
+
+  Future<void> getImageFromGallery() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  Future<void> takePicture() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+
+    setState(() {
+      if (pickedFile != null) {
+        image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
 
   void navigateToLogin() {
     if (Navigator.of(context, rootNavigator: true).canPop()) {
@@ -78,6 +105,14 @@ class _RegistrationState extends State<Registration> {
 
   @override
   Widget build(BuildContext context) {
+    // this widget shows the image uploaded by user
+    Widget imageWidget = Container(); // Initialize with an empty Container
+    if (image != null) {
+      imageWidget = Image.file(image!);
+    } else {
+      imageWidget = Text('No image selected.');
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -193,7 +228,20 @@ class _RegistrationState extends State<Registration> {
                         ),
                         Center(
                           child: Text(registerErrorMsg, style: const TextStyle(fontSize: 16.0, color: Colors.red)),
-                        )
+                        ),
+
+                        // upload image
+                        Center(
+                          child: Column(
+                            children: [
+                              imageWidget,
+                              ElevatedButton(
+                                onPressed: getImageFromGallery,
+                                child: Text('Select Image'),
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
