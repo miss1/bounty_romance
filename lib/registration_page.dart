@@ -90,129 +90,133 @@ class _RegistrationState extends State<Registration> {
         ),
       ),
       resizeToAvoidBottomInset: false,
-      body: Column(
-        children: [
-          Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20.0),
-                      child: Center(
-                        child: Text('Sign up', style: Theme.of(context).textTheme.headlineMedium),
-                      )
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    key: const Key('nickname'),
-                    decoration: InputDecoration(
-                      hintText: 'Enter your nickname',
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          _nameController.clear();
-                        },
-                      ),
-                    ),
-                    controller: _nameController,
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Nickname can not be null';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    key: const Key('email'),
-                    decoration: InputDecoration(
-                      hintText: 'Enter your email',
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          _emailController.clear();
-                        },
-                      ),
-                    ),
-                    controller: _emailController,
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty || !EmailValidator.validate(value)) {
-                        return 'Please enter a valid email';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    key: const Key('password'),
-                    decoration: InputDecoration(
-                      hintText: 'Enter your password',
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          _passwordController.clear();
-                        },
-                      ),
-                    ),
-                    obscureText: true,
-                    controller: _passwordController,
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty || value.length < 6) {
-                        return 'Password should be at least 6 characters';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 30),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-                          registerUser(_emailController.text, _passwordController.text, _nameController.text);
-                        }
-                      },
-                      style: ButtonStyle(
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+              children: [
+                Form(
+                  key: _formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 20.0),
+                            child: Center(
+                              child: Text('Sign up', style: Theme.of(context).textTheme.headlineMedium),
+                            )
+                        ),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          key: const Key('nickname'),
+                          decoration: InputDecoration(
+                            hintText: 'Enter your nickname',
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                _nameController.clear();
+                              },
+                            ),
+                          ),
+                          controller: _nameController,
+                          validator: (String? value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Nickname can not be null';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          key: const Key('email'),
+                          decoration: InputDecoration(
+                            hintText: 'Enter your email',
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                _emailController.clear();
+                              },
+                            ),
+                          ),
+                          controller: _emailController,
+                          validator: (String? value) {
+                            if (value == null || value.isEmpty || !EmailValidator.validate(value)) {
+                              return 'Please enter a valid email';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          key: const Key('password'),
+                          decoration: InputDecoration(
+                            hintText: 'Enter your password',
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                _passwordController.clear();
+                              },
+                            ),
+                          ),
+                          obscureText: true,
+                          controller: _passwordController,
+                          validator: (String? value) {
+                            if (value == null || value.isEmpty || value.length < 6) {
+                              return 'Password should be at least 6 characters';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 30),
+                        Center(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                _formKey.currentState!.save();
+                                registerUser(_emailController.text, _passwordController.text, _nameController.text);
+                              }
+                            },
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                              ),
+                              backgroundColor: MaterialStateProperty.all(Colors.blue),
+                              padding: MaterialStateProperty.all(
+                                const EdgeInsets.symmetric(vertical: 15.0, horizontal: 45.0),
+                              ),
+                            ),
+                            child: const Text('Sign up', style: TextStyle(fontSize: 16.0, color: Colors.white)),
                           ),
                         ),
-                        backgroundColor: MaterialStateProperty.all(Colors.blue),
-                        padding: MaterialStateProperty.all(
-                          const EdgeInsets.symmetric(vertical: 15.0, horizontal: 45.0),
-                        ),
-                      ),
-                      child: const Text('Sign up', style: TextStyle(fontSize: 16.0, color: Colors.white)),
+                        Center(
+                          child: Text(registerErrorMsg, style: const TextStyle(fontSize: 16.0, color: Colors.red)),
+                        )
+                      ],
                     ),
                   ),
-                  Center(
-                    child: Text(registerErrorMsg, style: const TextStyle(fontSize: 16.0, color: Colors.red)),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Container(
-              height: 50,
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Already have an account? ', style: TextStyle(fontSize: 14.0)),
-                    GestureDetector(
-                      onTap: () {
-                        navigateToLogin();
-                      },
-                      child: const Text('Sign in', style: TextStyle(fontSize: 14.0, color: Colors.blue)),
+                ),
+                Container(
+                    height: 50,
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text('Already have an account? ', style: TextStyle(fontSize: 14.0)),
+                          GestureDetector(
+                            onTap: () {
+                              navigateToLogin();
+                            },
+                            child: const Text('Sign in', style: TextStyle(fontSize: 14.0, color: Colors.blue)),
+                          )
+                        ]
                     )
-                  ]
-              )
-          )
-        ]
-      )
+                )
+              ]
+          ),
+        ),
+      ),
     );
   }
 }
