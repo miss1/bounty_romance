@@ -1,11 +1,10 @@
 import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login_page.dart';
+import 'upload_image.dart';
 import 'db.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:image_picker/image_picker.dart';
 
 class RegistrationPage extends StatelessWidget {
   const RegistrationPage({super.key});
@@ -43,44 +42,8 @@ class _RegistrationState extends State<Registration> {
   final List<String> genders = ['man', 'woman', 'others'];
   final List<bool> selectedGender = <bool>[true, false, false];
   String registerErrorMsg = '';
-  File? image;
   int genderIdx = 0;
-
-  Future<void> getImageFromGallery() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (pickedFile != null) {
-        image = File(pickedFile.path);
-      } else {
-        print('No image selected.');
-      }
-    });
-  }
-
-  Future<void> takePicture() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
-
-    setState(() {
-      if (pickedFile != null) {
-        image = File(pickedFile.path);
-      } else {
-        print('No image selected.');
-      }
-    });
-  }
-
-  Future<void> uploadImageToFirebase() async {
-    try {
-      if (image != null) {
-        Reference firebaseStorageRef = FirebaseStorage.instance.ref().child('images/${DateTime.now()}.png');
-        UploadTask uploadTask = firebaseStorageRef.putFile(image!);
-        await uploadTask.whenComplete(() => print('Image uploaded to Firebase Storage'));
-      }
-    } catch (e) {
-      print('Error uploading image to Firebase Storage: $e');
-    }
-  }
+  String avatarUrl = '';
 
   void navigateToLogin() {
     if (Navigator.of(context, rootNavigator: true).canPop()) {
@@ -90,18 +53,22 @@ class _RegistrationState extends State<Registration> {
     }
   }
 
-  Future<void> registerUser(String email, String password, String name) async {
+  Future<void> registerUser() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     try {
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
+        email: _emailController.text,
+        password: _passwordController.text,
       );
 
       final user = <String, dynamic>{
         "id": userCredential.user!.uid,
-        "name": name,
-        "email": email
+        "name": _nameController.text,
+        "email": _emailController.text,
+        "age": _ageController.text,
+        "intro": _introController.text,
+        "gender": genderIdx,
+        "avatar": ""
       };
       await FireStoreService.createUser(user);
 
@@ -121,15 +88,16 @@ class _RegistrationState extends State<Registration> {
     }
   }
 
+  Widget _imageWidget() {
+    if (avatarUrl == '') {
+      return Image.asset('assets/default.jpg', width: 100, height: 100);
+    } else {
+      return Image.network(avatarUrl, width: 100, height: 100);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // this widget shows the image uploaded by user
-    Widget imageWidget = Container(); // Initialize with an empty Container
-    if (image != null) {
-      imageWidget = Image.file(image!);
-    } else {
-      imageWidget = Text('No image selected.');
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -304,26 +272,15 @@ class _RegistrationState extends State<Registration> {
 
                         // upload image
                         Center(
-                          child: Column(
-                            children: [
-                              imageWidget,
-                              Wrap(
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: takePicture,
-                                    child: const Text('Take an Image'),
-                                  ),
-                                  const SizedBox(
-                                    width: 8,
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: getImageFromGallery,
-                                    child: const Text('Select Image'),
-                                  ),
-                                ],
-                              ),
-
-                            ],
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => UploadImage(defaultImgUrl: avatarUrl),
+                                ),
+                              );
+                            },
+                            child: _imageWidget()
                           ),
                         ),
                         const SizedBox(height: 30),
@@ -333,7 +290,7 @@ class _RegistrationState extends State<Registration> {
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
-                                registerUser(_emailController.text, _passwordController.text, _nameController.text);
+                                registerUser();
                               }
                             },
                             style: ButtonStyle(
@@ -357,7 +314,7 @@ class _RegistrationState extends State<Registration> {
                     ),
                   ),
                 ),
-                Container(
+                SizedBox(
                     height: 50,
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
