@@ -1,8 +1,8 @@
 // ignore_for_file: unused_import
 import 'package:flutter/material.dart';
 import 'package:bounty_romance/all_profiles_page.dart';
-import 'package:bounty_romance/db.dart';
-import 'package:bounty_romance/firebase_options.dart';
+import 'package:bounty_romance/common/db.dart';
+import 'package:bounty_romance/common/firebase_options.dart';
 import 'package:bounty_romance/login_page.dart';
 import 'package:bounty_romance/main.dart';
 import 'package:bounty_romance/registration_page.dart';

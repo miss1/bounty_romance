@@ -1,38 +1,18 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'login_page.dart';
+import 'package:go_router/go_router.dart';
 import 'upload_image.dart';
-import 'db.dart';
+import 'common/db.dart';
 import 'package:email_validator/email_validator.dart';
 
-class RegistrationPage extends StatelessWidget {
+class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
 
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Bounty Romance',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const Registration(title: 'Bounty Romance'),
-    );
-  }
+  State<RegistrationPage> createState() => _RegistrationState();
 }
 
-class Registration extends StatefulWidget {
-  const Registration({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<Registration> createState() => _RegistrationState();
-}
-
-class _RegistrationState extends State<Registration> {
+class _RegistrationState extends State<RegistrationPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -45,15 +25,15 @@ class _RegistrationState extends State<Registration> {
   int genderIdx = 0;
   String avatarUrl = '';
 
-  void navigateToLogin() {
-    if (Navigator.of(context, rootNavigator: true).canPop()) {
-      Navigator.of(context, rootNavigator: true).pop(context);
+  void navigateToLogin(BuildContext context) {
+    if (GoRouter.of(context).canPop()) {
+      GoRouter.of(context).pop();
     } else {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Login(title: 'Bounty Romance')));
+      GoRouter.of(context).replace('/');
     }
   }
 
-  Future<void> registerUser() async {
+  Future<void> registerUser(BuildContext context) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     try {
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
@@ -75,7 +55,7 @@ class _RegistrationState extends State<Registration> {
       setState(() {registerErrorMsg = '';});
       _emailController.clear();
       _passwordController.clear();
-      navigateToLogin();
+      if (context.mounted) navigateToLogin(context);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         setState(() {registerErrorMsg = 'The password provided is too weak.';});
@@ -102,11 +82,11 @@ class _RegistrationState extends State<Registration> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: const Text('Bounty Romance'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            navigateToLogin();
+            navigateToLogin(context);
           },
         ),
       ),
@@ -274,11 +254,7 @@ class _RegistrationState extends State<Registration> {
                         Center(
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => UploadImage(defaultImgUrl: avatarUrl),
-                                ),
-                              );
+                              GoRouter.of(context).push('/uploadAvatar');
                             },
                             child: _imageWidget()
                           ),
@@ -290,7 +266,7 @@ class _RegistrationState extends State<Registration> {
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
-                                registerUser();
+                                registerUser(context);
                               }
                             },
                             style: ButtonStyle(
@@ -322,7 +298,7 @@ class _RegistrationState extends State<Registration> {
                           const Text('Already have an account? ', style: TextStyle(fontSize: 14.0)),
                           GestureDetector(
                             onTap: () {
-                              navigateToLogin();
+                              navigateToLogin(context);
                             },
                             child: const Text('Sign in', style: TextStyle(fontSize: 14.0, color: Colors.blue)),
                           )

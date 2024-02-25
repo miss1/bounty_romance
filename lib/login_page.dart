@@ -1,46 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'registration_page.dart';
-import 'all_profiles_page.dart';
+import 'package:go_router/go_router.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key, required this.title});
-
-  final String title;
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<LoginPage> createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   String loginErrorMsg = '';
 
-  void signupFn() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const RegistrationPage(),
-      ),
-    );
-  }
-
-  void navigateToHome() {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const AllProfilesPage()));
-  }
-
-  Future<void> loginFn(String email, String password) async {
+  Future<void> loginFn(BuildContext context) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email,
-          password: password
+          email: usernameController.text,
+          password: passwordController.text
       );
       setState(() {loginErrorMsg = '';});
       usernameController.clear();
       passwordController.clear();
-      navigateToHome();
+      if (context.mounted) GoRouter.of(context).replace('/home');
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         setState(() {loginErrorMsg = 'No user found for that email.';});
@@ -58,7 +43,7 @@ class _LoginState extends State<Login> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: const Text('Bounty Romance'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -140,7 +125,7 @@ class _LoginState extends State<Login> {
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
                                   _formKey.currentState!.save();
-                                  loginFn(usernameController.text, passwordController.text);
+                                  loginFn(context);
                                 }
                               },
                               style: ButtonStyle(
@@ -175,7 +160,7 @@ class _LoginState extends State<Login> {
                           const Text('Don`t have an account? ', style: TextStyle(fontSize: 14.0)),
                           GestureDetector(
                             onTap: () {
-                              signupFn();
+                              GoRouter.of(context).go('/registration');
                             },
                             child: const Text('Sign up', style: TextStyle(fontSize: 14.0, color: Colors.blue)),
                           )
