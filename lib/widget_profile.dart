@@ -16,6 +16,7 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfile extends State<UserProfile> {
   UserInfoModel userInfo = UserInfoModel.generateEmpty();
+  final List<String> genders = ['man', 'woman', 'others'];
 
   @override
   void initState() {
@@ -90,7 +91,7 @@ class _UserProfile extends State<UserProfile> {
                   const SizedBox(height: 10),
                   Text(userInfo.name, style: const TextStyle(color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 10),
-                  Text('${userInfo.age} | ${userInfo.gender}', style: const TextStyle(color: Colors.grey, fontSize: 14)),
+                  Text('${userInfo.age} | ${genders[userInfo.gender]}', style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   const SizedBox(height: 10),
                   Text(userInfo.email, style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   const SizedBox(height: 25),

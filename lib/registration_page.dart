@@ -47,7 +47,7 @@ class _RegistrationState extends State<RegistrationPage> {
           email: _emailController.text,
           age: _ageController.text,
           intro: _introController.text,
-          gender: genderIdx.toString(),
+          gender: genderIdx,
           avatar: avatarUrl
       );
       await FireStoreService.createUser(userInfo);
@@ -79,9 +79,9 @@ class _RegistrationState extends State<RegistrationPage> {
 
   Widget _imageWidget() {
     if (avatarUrl == '') {
-      return Image.asset('assets/default.jpg', width: 100, height: 100);
+      return Image.asset('assets/default.jpg', width: 150, height: 150);
     } else {
-      return Image.network(avatarUrl, width: 100, height: 100);
+      return Image.network(avatarUrl, width: 150, height: 150);
     }
   }
 
@@ -118,6 +118,23 @@ class _RegistrationState extends State<RegistrationPage> {
                             )
                         ),
                         const SizedBox(height: 20),
+                        // upload image
+                        Center(
+                          child: GestureDetector(
+                              onTap: () {
+                                uploadAvatar();
+                              },
+                              child: Column(
+                                children: [
+                                  ClipOval(
+                                    child: _imageWidget()
+                                  ),
+                                  const Icon(Icons.edit)
+                                ],
+                              )
+                          ),
+                        ),
+                        const SizedBox(height: 30),
                         TextFormField(
                           key: const Key('nickname'),
                           decoration: InputDecoration(
@@ -258,17 +275,6 @@ class _RegistrationState extends State<RegistrationPage> {
                           ),
                         ),
                         const SizedBox(height: 20),
-
-                        // upload image
-                        Center(
-                          child: GestureDetector(
-                            onTap: () {
-                              uploadAvatar();
-                            },
-                            child: _imageWidget()
-                          ),
-                        ),
-                        const SizedBox(height: 30),
 
                         Center(
                           child: ElevatedButton(

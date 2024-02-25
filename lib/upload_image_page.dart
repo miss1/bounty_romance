@@ -38,7 +38,10 @@ class _UploadImage extends State<UploadImage> {
     final croppedFile = await ImageCropper().cropImage(
       sourcePath: pickedFile.path,
       compressFormat: ImageCompressFormat.jpg,
-      compressQuality: 100,
+      compressQuality: 90,
+      aspectRatioPresets: [
+        CropAspectRatioPreset.square,
+      ],
       uiSettings: [
         AndroidUiSettings(
             toolbarTitle: 'Cropper',

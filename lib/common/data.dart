@@ -6,7 +6,7 @@ class UserInfoModel {
   final String email;
   final String age;
   final String intro;
-  final String gender;
+  final int gender;
   final String avatar;
 
   UserInfoModel({required this.id, required this.name, required this.email, required this.age,
@@ -20,7 +20,7 @@ class UserInfoModel {
         email: data['email'],
         age: data['age'] ?? '0',
         intro: data['intro'] ?? '',
-        gender: data['gender'] ?? '',
+        gender: data['gender'] ?? 0,
         avatar: data['avatar'] ?? ''
     );
   }
@@ -32,7 +32,7 @@ class UserInfoModel {
         email: '',
         age: '',
         intro: '',
-        gender: '',
+        gender: 0,
         avatar: ''
     );
   }
