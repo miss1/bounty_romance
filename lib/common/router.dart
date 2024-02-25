@@ -6,6 +6,7 @@ import 'package:bounty_romance/login_page.dart';
 import 'package:bounty_romance/registration_page.dart';
 import 'package:bounty_romance/all_profiles_page.dart';
 import 'package:bounty_romance/upload_image_page.dart';
+import 'package:bounty_romance/my_profile_page.dart';
 import 'package:bounty_romance/user_profile_page.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -34,6 +35,13 @@ final GoRouter router = GoRouter(
         return UploadImage(defaultImgUrl: defaultImg);
       }
     ),
+    GoRoute(
+        path: '/userProfile',
+        builder: (context, state) {
+          String userId = state.extra as String;
+          return UserProfilePage(uid: userId);
+        }
+    ),
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
       builder: (context, state, child) {
@@ -54,7 +62,7 @@ final GoRouter router = GoRouter(
           path: '/myProfile',
           parentNavigatorKey: _shellNavigatorKey,
           builder: (context, state) {
-            return const UserProfilePage();
+            return const MyProfilePage();
           }
         ),
       ],

@@ -1,38 +1,29 @@
-import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'widget_profile.dart';
 
-import 'common/data.dart';
-import 'common/db.dart';
-import 'common/nav_notifier.dart';
-
-class UserProfilePage extends StatefulWidget {
-  const UserProfilePage({super.key});
-
-  @override
-  State<UserProfilePage> createState() => _UserProfilePage();
-}
-
-class _UserProfilePage extends State<UserProfilePage> {
-  UserInfoModel userInfo = UserInfoModel.generateEmpty();
-
-  @override
-  void initState() {
-    super.initState();
-    getUserInfo();
-  }
-
-  Future<void> getUserInfo() async {
-    String uid = FireStoreService.getCurrentUid();
-    UserInfoModel info = await FireStoreService.getUserInfo(uid);
-    if (context.mounted) context.read<NavNotifier>().changeNavBar(1);
-    debugPrint(info.id);
-    setState(() {
-      userInfo = info;
-    });
-  }
+class UserProfilePage extends StatelessWidget {
+  final String uid;
+  const UserProfilePage({super.key, required this.uid});
 
   @override
   Widget build(BuildContext context) {
-    return Text(userInfo.name);
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('Bounty Romance'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            GoRouter.of(context).pop();
+          },
+        ),
+      ),
+      body: SafeArea(
+        child: Center(
+          child: UserProfile(pageType: 'user', uid: uid),
+        )
+      )
+    );
   }
 }
