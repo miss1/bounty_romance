@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
-import 'upload_image.dart';
 import 'common/db.dart';
+import 'common/data.dart';
 import 'package:email_validator/email_validator.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -41,16 +41,16 @@ class _RegistrationState extends State<RegistrationPage> {
         password: _passwordController.text,
       );
 
-      final user = <String, dynamic>{
-        "id": userCredential.user!.uid,
-        "name": _nameController.text,
-        "email": _emailController.text,
-        "age": _ageController.text,
-        "intro": _introController.text,
-        "gender": genderIdx,
-        "avatar": ""
-      };
-      await FireStoreService.createUser(user);
+      UserInfoModel userInfo = UserInfoModel(
+          id: userCredential.user!.uid,
+          name: _nameController.text,
+          email: _emailController.text,
+          age: _ageController.text,
+          intro: _introController.text,
+          gender: genderIdx.toString(),
+          avatar: ''
+      );
+      await FireStoreService.createUser(userInfo);
 
       setState(() {registerErrorMsg = '';});
       _emailController.clear();

@@ -1,14 +1,39 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:bounty_romance/common/data.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class FireStoreService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  static Future<void> createUser(Map<String, dynamic> user) async {
-    await _firestore.collection("users").add(user);
+  static Future<void> createUser(UserInfoModel user) async {
+    DocumentReference documentReference = _firestore.collection('users').doc(user.id);
+    await documentReference.set(user.toMap());
   }
 
-  static Future<List<Map<String, dynamic>>> getUsers() async {
+  static Future<List<UserInfoModel>> getUsers() async {
     QuerySnapshot querySnapshot = await _firestore.collection("users").get();
-    return querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+    List<UserInfoModel> userList = [];
+    for (var document in querySnapshot.docs) {
+      userList.add(UserInfoModel.fromSnapshot(document));
+    }
+    return userList;
+  }
+
+  static Future<UserInfoModel> getUserInfo(String id) async {
+    DocumentReference documentReference = _firestore.collection('users').doc(id);
+    DocumentSnapshot snapshot = await documentReference.get();
+    if (snapshot.exists) {
+      return UserInfoModel.fromSnapshot(snapshot);
+    }
+    return UserInfoModel.generateEmpty();
+  }
+
+  static String getCurrentUid() {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+    if (user != null) {
+      return user.uid;
+    }
+    return '';
   }
 }

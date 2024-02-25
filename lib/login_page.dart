@@ -16,9 +16,8 @@ class _LoginState extends State<LoginPage> {
   String loginErrorMsg = '';
 
   Future<void> loginFn(BuildContext context) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
     try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: usernameController.text,
           password: passwordController.text
       );
