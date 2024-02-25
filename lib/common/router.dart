@@ -30,7 +30,8 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/uploadAvatar',
       builder: (context, state) {
-        return const UploadImage(defaultImgUrl: 'assets/default.jpg');
+        String defaultImg = state.extra as String;
+        return UploadImage(defaultImgUrl: defaultImg);
       }
     ),
     ShellRoute(

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:path/path.dart' as path;
@@ -15,7 +16,7 @@ class UploadImage extends StatefulWidget {
 
 class _UploadImage extends State<UploadImage> {
 
-  String _imageUrl = '';
+  File? imageFile;
 
   Future<void> getImageFromGallery() async {
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -33,9 +34,9 @@ class _UploadImage extends State<UploadImage> {
     }
   }
 
-  Future<void> cropImage(XFile imageFile) async {
+  Future<void> cropImage(XFile pickedFile) async {
     final croppedFile = await ImageCropper().cropImage(
-      sourcePath: imageFile.path,
+      sourcePath: pickedFile.path,
       compressFormat: ImageCompressFormat.jpg,
       compressQuality: 100,
       uiSettings: [
@@ -65,31 +66,34 @@ class _UploadImage extends State<UploadImage> {
     );
 
     if (croppedFile != null) {
-      uploadImageToFirebase(File(croppedFile.path));
+      setState(() {
+        imageFile = File(croppedFile.path);
+      });
     }
   }
 
-  Future<void> uploadImageToFirebase(File imageFile) async {
-    try {
-      String extension = path.extension(imageFile.path);
-      Reference firebaseStorageRef = FirebaseStorage.instance.ref().child('images/${DateTime.now()}$extension');
-      UploadTask uploadTask = firebaseStorageRef.putFile(imageFile);
-      await uploadTask.whenComplete(() async {
-        final newImageUrl = await firebaseStorageRef.getDownloadURL();
-        setState(() {
-          _imageUrl = newImageUrl;
+  Future<void> uploadImageToFirebase() async {
+    if (imageFile != null) {
+      try {
+        String extension = path.extension(imageFile!.path);
+        Reference firebaseStorageRef = FirebaseStorage.instance.ref().child('images/${DateTime.now()}$extension');
+        UploadTask uploadTask = firebaseStorageRef.putFile(imageFile!);
+        await uploadTask.whenComplete(() async {
+          final newImageUrl = await firebaseStorageRef.getDownloadURL();
+          if (context.mounted) GoRouter.of(context).pop(newImageUrl);
         });
-      });
-        } catch (e) {
-      print('Error uploading image to Firebase Storage: $e');
+      } catch (e) {
+        print('Error uploading image to Firebase Storage: $e');
+      }
     }
   }
 
   Widget _imageWidget() {
-    if (_imageUrl == '') {
-      return Image.asset('assets/default.jpg');
+    if (imageFile == null) {
+      if (widget.defaultImgUrl == '') return Image.asset('assets/default.jpg');
+      return Image.network(widget.defaultImgUrl);
     } else {
-      return Image.network(_imageUrl);
+      return Image.file(imageFile!);
     }
   }
 
@@ -97,6 +101,16 @@ class _UploadImage extends State<UploadImage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: const Text('Change Image', style: TextStyle(color: Colors.white)),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white,),
+          onPressed: () {
+            GoRouter.of(context).pop('');
+          },
+        ),
+      ),
       backgroundColor: Colors.black,
       body: Center(
         child: Column(
@@ -121,8 +135,13 @@ class _UploadImage extends State<UploadImage> {
                 ElevatedButton(
                   onPressed: getImageFromGallery,
                   child: const Text('Select Image'),
-                ),
+                )
               ],
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: imageFile != null ? uploadImageToFirebase : null,
+              child: const Text('Submit'),
             ),
           ],
         )

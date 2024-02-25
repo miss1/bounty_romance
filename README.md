@@ -22,3 +22,8 @@ This project is a starting point for a Flutter application.
 * Login - finished
 * Display user list - finished
 * test: over 30% code coverage - finished
+
+## Milestone 2
+* Manage dating profile
+* Display individual profile
+* Generalizing location

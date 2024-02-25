@@ -48,7 +48,7 @@ class _RegistrationState extends State<RegistrationPage> {
           age: _ageController.text,
           intro: _introController.text,
           gender: genderIdx.toString(),
-          avatar: ''
+          avatar: avatarUrl
       );
       await FireStoreService.createUser(userInfo);
 
@@ -65,6 +65,15 @@ class _RegistrationState extends State<RegistrationPage> {
     } catch (e) {
       print(e);
       setState(() {registerErrorMsg = 'Registration failed';});
+    }
+  }
+
+  Future<void> uploadAvatar() async {
+    final result = await GoRouter.of(context).push('/uploadAvatar', extra: avatarUrl);
+    if (result != null && result != '') {
+      setState(() {
+        avatarUrl = result.toString();
+      });
     }
   }
 
@@ -254,7 +263,7 @@ class _RegistrationState extends State<RegistrationPage> {
                         Center(
                           child: GestureDetector(
                             onTap: () {
-                              GoRouter.of(context).push('/uploadAvatar');
+                              uploadAvatar();
                             },
                             child: _imageWidget()
                           ),
