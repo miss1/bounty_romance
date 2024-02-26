@@ -8,6 +8,7 @@ import 'package:bounty_romance/all_profiles_page.dart';
 import 'package:bounty_romance/upload_image_page.dart';
 import 'package:bounty_romance/my_profile_page.dart';
 import 'package:bounty_romance/user_profile_page.dart';
+import 'package:bounty_romance/edit_profile_page.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -40,6 +41,12 @@ final GoRouter router = GoRouter(
         builder: (context, state) {
           String userId = state.extra as String;
           return UserProfilePage(uid: userId);
+        }
+    ),
+    GoRoute(
+        path: '/editProfile',
+        builder: (context, state) {
+          return const EditProfilePage();
         }
     ),
     ShellRoute(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import 'common/data.dart';
@@ -36,6 +37,13 @@ class _UserProfile extends State<UserProfile> {
     });
   }
 
+  Future<void> editProfile() async {
+    final result = await GoRouter.of(context).push('/editProfile');
+    if (result != null && result != '') {
+      getUserInfo();
+    }
+  }
+
   Widget _imageWidget(avatar) {
     if (avatar != '') {
       return Image.network(avatar, width: 200, height: 200, fit: BoxFit.cover,);
@@ -53,6 +61,9 @@ class _UserProfile extends State<UserProfile> {
     return ElevatedButton(
       onPressed: () {
         print(widget.pageType);
+        if (widget.pageType == 'me') {
+          editProfile();
+        }
       },
       style: ButtonStyle(
         shape: MaterialStateProperty.all(

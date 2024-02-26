@@ -159,7 +159,7 @@ class _LoginState extends State<LoginPage> {
                           const Text('Don`t have an account? ', style: TextStyle(fontSize: 14.0)),
                           GestureDetector(
                             onTap: () {
-                              GoRouter.of(context).go('/registration');
+                              GoRouter.of(context).push('/registration');
                             },
                             child: const Text('Sign up', style: TextStyle(fontSize: 14.0, color: Colors.blue)),
                           )

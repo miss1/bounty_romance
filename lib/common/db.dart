@@ -28,6 +28,19 @@ class FireStoreService {
     return UserInfoModel.generateEmpty();
   }
 
+  static Future<void> updateUserProfile(UserInfoModel user) async {
+    String id = getCurrentUid();
+    DocumentReference documentReference = _firestore.collection('users').doc(id);
+
+    await documentReference.update({
+      'avatar': user.avatar,
+      'gender': user.gender,
+      'name': user.name,
+      'age': user.age,
+      'intro': user.intro
+    });
+  }
+
   static String getCurrentUid() {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user = auth.currentUser;
