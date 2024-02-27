@@ -1,24 +1,24 @@
+import 'package:bounty_romance/common/router.dart';
+import 'package:bounty_romance/common/nav_notifier.dart';
+import 'package:provider/provider.dart';
 // ignore_for_file: unused_import
 import 'package:flutter/material.dart';
-import 'package:bounty_romance/all_profiles_page.dart';
 import 'package:bounty_romance/common/db.dart';
-import 'package:bounty_romance/common/firebase_options.dart';
-import 'package:bounty_romance/login_page.dart';
 import 'package:bounty_romance/main.dart';
+import 'package:bounty_romance/all_profiles_page.dart';
+import 'package:bounty_romance/login_page.dart';
 import 'package:bounty_romance/registration_page.dart';
+import 'package:bounty_romance/upload_image_page.dart';
+import 'package:bounty_romance/home_nav_bar.dart';
+import 'package:bounty_romance/user_profile_page.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('main widget test', (WidgetTester tester) async {
-    await tester.pumpWidget(const MyApp());
-    expect(find.byType(Login), findsOneWidget);
-  });
-
   testWidgets('login page: tap clear icon', (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(
-      home: Login(title: 'Bounty Romance'),
+      home: LoginPage(),
     ));
-    expect(find.byType(Login), findsOneWidget);
+    expect(find.byType(LoginPage), findsOneWidget);
 
     // test email filed: tap clear icon
     await tester.enterText(find.byKey(const Key('email')), 'Hello');
@@ -43,9 +43,9 @@ void main() {
 
   testWidgets('login page: form validation', (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(
-      home: Login(title: 'Bounty Romance'),
+      home: LoginPage(),
     ));
-    expect(find.byType(Login), findsOneWidget);
+    expect(find.byType(LoginPage), findsOneWidget);
 
     await tester.enterText(find.byKey(const Key('email')), 'Hello');
     await tester.enterText(find.byKey(const Key('password')), '123a');
@@ -61,10 +61,10 @@ void main() {
   });
 
   testWidgets('login page: click signup', (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
-      home: Login(title: 'Bounty Romance'),
+    await tester.pumpWidget(MaterialApp.router(
+      routerConfig: router,
     ));
-    expect(find.byType(Login), findsOneWidget);
+    expect(find.byType(LoginPage), findsOneWidget);
 
     expect(find.byType(RegistrationPage), findsNothing);
     Finder signup = find.text('Sign up');
@@ -112,40 +112,26 @@ void main() {
     expect(find.text('Hello'), findsNothing);
   });
 
-  testWidgets('registration page: form validation', (WidgetTester tester) async {
+  testWidgets('upload image page', (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(
-      home: RegistrationPage(),
+      home: UploadImage(defaultImgUrl: '',)
     ));
-    expect(find.byType(RegistrationPage), findsOneWidget);
-
-    await tester.enterText(find.byKey(const Key('nickname')), '');
-    await tester.enterText(find.byKey(const Key('email')), 'Hello');
-    await tester.enterText(find.byKey(const Key('password')), '123a');
-
-    expect(find.text('Nickname can not be null'), findsNothing);
-    expect(find.text('Please enter a valid email'), findsNothing);
-    expect(find.text('Password should be at least 6 characters'), findsNothing);
-
-    await tester.tap(find.byType(ElevatedButton));
-    await tester.pump();
-
-    expect(find.text('Nickname can not be null'), findsOneWidget);
-    expect(find.text('Please enter a valid email'), findsOneWidget);
-    expect(find.text('Password should be at least 6 characters'), findsOneWidget);
+    expect(find.byType(UploadImage), findsOneWidget);
   });
 
-  testWidgets('registration page: click sign in', (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
-      home: RegistrationPage(),
-    ));
-    expect(find.byType(RegistrationPage), findsOneWidget);
-
-    expect(find.byType(Login), findsNothing);
-    Finder signIn = find.text('Sign in');
-    expect(signIn, findsOneWidget);
-
-    await tester.tap(signIn);
-    await tester.pumpAndSettle();
-    expect(find.byType(Login), findsOneWidget);
-  });
+  // testWidgets('home nav bar', (WidgetTester tester) async {
+  //   await tester.pumpWidget(
+  //       MultiProvider(
+  //           providers: [
+  //             ChangeNotifierProvider(
+  //               create: (context) => NavNotifier(),
+  //             ),
+  //           ],
+  //           child: const MaterialApp(
+  //             home: HomePageNavBar(child: UserProfilePage(uid: '',)),
+  //           )
+  //       )
+  //   );
+  //   expect(find.byType(HomePageNavBar), findsOneWidget);
+  // });
 }

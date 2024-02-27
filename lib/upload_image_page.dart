@@ -115,40 +115,42 @@ class _UploadImage extends State<UploadImage> {
         ),
       ),
       backgroundColor: Colors.black,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.width,
-              child: _imageWidget()
-            ),
-            const SizedBox(height: 20),
-            Wrap(
-              children: [
-                ElevatedButton(
-                  onPressed: takePicture,
-                  child: const Text('Take an Image'),
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                ElevatedButton(
-                  onPressed: getImageFromGallery,
-                  child: const Text('Select Image'),
-                )
-              ],
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: imageFile != null ? uploadImageToFirebase : null,
-              child: const Text('Submit'),
-            ),
-          ],
-        )
-      ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.width,
+                  child: _imageWidget()
+              ),
+              const SizedBox(height: 20),
+              Wrap(
+                children: [
+                  ElevatedButton(
+                    onPressed: takePicture,
+                    child: const Text('Take an Image'),
+                  ),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  ElevatedButton(
+                    onPressed: getImageFromGallery,
+                    child: const Text('Select Image'),
+                  )
+                ],
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: imageFile != null ? uploadImageToFirebase : null,
+                child: const Text('Submit'),
+              ),
+            ],
+          )
+        ),
+      )
     );
   }
 }
