@@ -1,3 +1,4 @@
+import 'package:bounty_romance/common/data.dart';
 import 'package:bounty_romance/common/router.dart';
 import 'package:bounty_romance/common/nav_notifier.dart';
 import 'package:provider/provider.dart';
@@ -119,19 +120,67 @@ void main() {
     expect(find.byType(UploadImage), findsOneWidget);
   });
 
-  // testWidgets('home nav bar', (WidgetTester tester) async {
-  //   await tester.pumpWidget(
-  //       MultiProvider(
-  //           providers: [
-  //             ChangeNotifierProvider(
-  //               create: (context) => NavNotifier(),
-  //             ),
-  //           ],
-  //           child: const MaterialApp(
-  //             home: HomePageNavBar(child: UserProfilePage(uid: '',)),
-  //           )
-  //       )
-  //   );
-  //   expect(find.byType(HomePageNavBar), findsOneWidget);
-  // });
+  test('Nav Notifier Test', () {
+    NavNotifier navNotifier = NavNotifier();
+
+    expect(navNotifier.currentIndex, 0);
+
+    navNotifier.changeNavBar(1);
+
+    expect(navNotifier.currentIndex, 1);
+
+    bool listenerCalled = false;
+    navNotifier.addListener(() {
+      listenerCalled = true;
+    });
+
+    navNotifier.notifyListeners();
+
+    expect(listenerCalled, isTrue);
+  });
+
+  test('UserInfoModel Test', () {
+    // create a UserInfoModel instance
+    UserInfoModel userInfo = UserInfoModel(
+      id: '1',
+      name: 'John',
+      email: 'john@example.com',
+      age: '30',
+      intro: 'A brief intro',
+      gender: 1,
+      avatar: 'avatar_url',
+      city: 'New York',
+    );
+
+    expect(userInfo.id, '1');
+    expect(userInfo.name, 'John');
+    expect(userInfo.email, 'john@example.com');
+    expect(userInfo.age, '30');
+    expect(userInfo.intro, 'A brief intro');
+    expect(userInfo.gender, 1);
+    expect(userInfo.avatar, 'avatar_url');
+    expect(userInfo.city, 'New York');
+
+    // test generateEmpty function
+    UserInfoModel emptyUserInfo = UserInfoModel.generateEmpty();
+    expect(emptyUserInfo.id, '');
+    expect(emptyUserInfo.name, '');
+    expect(emptyUserInfo.email, '');
+    expect(emptyUserInfo.age, '');
+    expect(emptyUserInfo.intro, '');
+    expect(emptyUserInfo.gender, 0);
+    expect(emptyUserInfo.avatar, '');
+    expect(emptyUserInfo.city, '-');
+
+    // test toMap function
+    Map<String, dynamic> userInfoMap = userInfo.toMap();
+    expect(userInfoMap['id'], '1');
+    expect(userInfoMap['name'], 'John');
+    expect(userInfoMap['email'], 'john@example.com');
+    expect(userInfoMap['age'], '30');
+    expect(userInfoMap['intro'], 'A brief intro');
+    expect(userInfoMap['gender'], 1);
+    expect(userInfoMap['avatar'], 'avatar_url');
+    expect(userInfoMap['city'], 'New York');
+  });
 }
