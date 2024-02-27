@@ -27,7 +27,10 @@ class _AllProfilesState extends State<AllProfilesPage> {
     if (context.mounted) context.read<NavNotifier>().changeNavBar(0);
     setState(() {
       userList = usersData;
+      String id = FireStoreService.getCurrentUid();
+      userList.removeWhere((item) => item.id == id);
     });
+    print(userList);
   }
 
   Widget _imageWidget(avatar) {
