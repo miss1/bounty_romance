@@ -48,7 +48,8 @@ class _RegistrationState extends State<RegistrationPage> {
           age: _ageController.text,
           intro: _introController.text,
           gender: genderIdx,
-          avatar: avatarUrl
+          avatar: avatarUrl,
+          city: '-'
       );
       await FireStoreService.createUser(userInfo);
 

@@ -39,19 +39,22 @@ class _AllProfilesState extends State<AllProfilesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.all(8),
-      itemCount: userList.length,
-      itemBuilder: (BuildContext context, int index) {
-        return ListTile(
-          leading: _imageWidget(userList[index].avatar),
-          title: Text(userList[index].name),
-          subtitle: Text(userList[index].intro),
-          onTap: () {
-            GoRouter.of(context).push('/userProfile', extra: userList[index].id);
-          },
-        );
-      }
+    return Container(
+      color: Colors.white,
+      child: ListView.builder(
+          padding: const EdgeInsets.all(8),
+          itemCount: userList.length,
+          itemBuilder: (BuildContext context, int index) {
+            return ListTile(
+              leading: _imageWidget(userList[index].avatar),
+              title: Text(userList[index].name),
+              subtitle: Text(userList[index].intro),
+              onTap: () {
+                GoRouter.of(context).push('/userProfile', extra: userList[index].id);
+              },
+            );
+          }
+      ),
     );
   }
 }

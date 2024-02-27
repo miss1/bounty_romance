@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'widget_profile.dart';
 
 class MyProfilePage extends StatelessWidget {
@@ -6,6 +7,9 @@ class MyProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const UserProfile(pageType: 'me', uid: '');
+    return Container(
+      color: Colors.white,
+      child: const UserProfile(pageType: 'me', uid: ''),
+    );
   }
 }

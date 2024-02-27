@@ -44,6 +44,10 @@ class _UserProfile extends State<UserProfile> {
     }
   }
 
+  void editLocation() {
+    GoRouter.of(context).push('/map');
+  }
+
   Widget _imageWidget(avatar) {
     if (avatar != '') {
       return Image.network(avatar, width: 200, height: 200, fit: BoxFit.cover,);
@@ -106,6 +110,26 @@ class _UserProfile extends State<UserProfile> {
                   const SizedBox(height: 10),
                   Text(userInfo.email, style: const TextStyle(color: Colors.grey, fontSize: 14)),
                   const SizedBox(height: 25),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.8,
+            child: Card(
+              elevation: 3.0,
+              margin: EdgeInsets.all(8),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 25),
+                  const Icon(Icons.location_city),
+                  Text(userInfo.city, style: const TextStyle(color: Colors.green, fontSize: 16)),
+                  IconButton(
+                    onPressed: widget.pageType == 'me' ? editLocation : null,
+                    icon: const Icon(Icons.edit, color: Colors.blue)
+                  ),
                 ],
               ),
             ),
