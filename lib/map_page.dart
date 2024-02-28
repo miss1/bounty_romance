@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapPage extends StatefulWidget {
@@ -24,6 +25,14 @@ class _MapPageState extends State<MapPage> {
         appBar: AppBar(
           title: const Text('Choose location'),
           backgroundColor: Colors.blue[700],
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              if (GoRouter.of(context).canPop()) {
+                GoRouter.of(context).pop();
+              }
+            },
+          ),
         ),
         body: GoogleMap(
           onMapCreated: _onMapCreated,
