@@ -13,8 +13,14 @@ import 'package:bounty_romance/upload_image_page.dart';
 import 'package:bounty_romance/home_nav_bar.dart';
 import 'package:bounty_romance/user_profile_page.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() {
+  // setUpAll(() async {
+  //   // Initialize Firebase
+  //   await Firebase.initializeApp();
+  // });
+
   testWidgets('login page: tap clear icon', (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(
       home: LoginPage(),
@@ -182,5 +188,25 @@ void main() {
     expect(userInfoMap['gender'], 1);
     expect(userInfoMap['avatar'], 'avatar_url');
     expect(userInfoMap['city'], 'New York');
+  });
+
+  // test if all profile page widget
+  testWidgets('AllProfilePage Test', (WidgetTester tester) async {
+    await Firebase.initializeApp();
+    await tester.pumpWidget(
+        const MaterialApp(
+      home: LoginPage(),
+    ));
+    final username = find.byKey(const Key("email"));
+    final password = find.byKey(const Key('password'));
+    final loginBt = find.byType(ElevatedButton);
+
+    // action: enter an existing email and password, click sign in button
+    await tester.enterText(username, 'test1@gamil.com');
+    await tester.enterText(password, '12345678');
+    await tester.tap(loginBt);
+
+    // validate
+    expect(find.byType(AllProfilesPage), findsOneWidget);
   });
 }
