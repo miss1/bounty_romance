@@ -50,9 +50,11 @@ class _RegistrationState extends State<RegistrationPage> {
           intro: _introController.text,
           gender: genderIdx,
           avatar: avatarUrl,
-          city: '-'
+          city: '-',
+          lat: 0.0,
+          lng: 0.0
       );
-      await context.read<FireStoreService>().createUser(userInfo);
+      if (context.mounted) await context.read<FireStoreService>().createUser(userInfo);
 
       setState(() {registerErrorMsg = '';});
       _emailController.clear();

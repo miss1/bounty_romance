@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:bounty_romance/home_nav_bar.dart';
@@ -53,7 +54,11 @@ final GoRouter router = GoRouter(
     GoRoute(
         path: '/map',
         builder: (context, state) {
-          return const MapPage();
+          final type = state.uri.queryParameters['type'] ?? '';
+          final lat = state.uri.queryParameters['lat'] ?? '0.0';
+          final lng = state.uri.queryParameters['lng'] ?? '0.0';
+          final location = LatLng(double.parse(lat), double.parse(lng));
+          return MapPage(type: type, center: location);
         }
     ),
     ShellRoute(

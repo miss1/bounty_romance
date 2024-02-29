@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bounty_romance/common/data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -38,6 +40,17 @@ class FireStoreService {
       'name': user.name,
       'age': user.age,
       'intro': user.intro
+    });
+  }
+
+  Future<void> updateUserLocation(String city, double lat, double lng) async {
+    String id = getCurrentUid();
+    DocumentReference documentReference = _firestore.collection('users').doc(id);
+
+    await documentReference.update({
+      'city': city,
+      'lat': lat,
+      'lng': lng
     });
   }
 

@@ -44,8 +44,16 @@ class _UserProfile extends State<UserProfile> {
     }
   }
 
-  void editLocation() {
-    GoRouter.of(context).push('/map');
+  Future<void> showLocation() async {
+    final result = await GoRouter.of(context).push(
+      Uri(
+        path: '/map',
+        queryParameters: {'type': widget.pageType, 'lat': userInfo.lat.toString(), 'lng': userInfo.lng.toString()}
+      ).toString()
+    );
+    if (result != null && result != '') {
+      getUserInfo();
+    }
   }
 
   Widget _imageWidget(avatar) {
@@ -64,7 +72,6 @@ class _UserProfile extends State<UserProfile> {
     }
     return ElevatedButton(
       onPressed: () {
-        print(widget.pageType);
         if (widget.pageType == 'me') {
           editProfile();
         }
@@ -127,8 +134,8 @@ class _UserProfile extends State<UserProfile> {
                   const Icon(Icons.location_city),
                   Text(userInfo.city, style: const TextStyle(color: Colors.green, fontSize: 16)),
                   IconButton(
-                    onPressed: widget.pageType == 'me' ? editLocation : null,
-                    icon: const Icon(Icons.edit, color: Colors.blue)
+                    onPressed: showLocation,
+                    icon: Icon(widget.pageType == 'me' ? Icons.edit : Icons.looks, color: Colors.blue)
                   ),
                 ],
               ),

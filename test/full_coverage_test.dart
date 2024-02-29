@@ -164,6 +164,8 @@ void main() {
       gender: 1,
       avatar: 'avatar_url',
       city: 'New York',
+      lat: 0.0,
+      lng: 0.0
     );
 
     expect(userInfo.id, '1');
@@ -240,7 +242,9 @@ void main() {
         intro: 'love me',
         gender: 0,
         avatar: '',
-        city: ''
+        city: '',
+        lat: 0.0,
+        lng: 0.0
     );
     when(mockFireStoreService.getUsers()).thenAnswer((_) async => Future.value([user]));
     when(mockFireStoreService.getCurrentUid()).thenAnswer((_) => "0");

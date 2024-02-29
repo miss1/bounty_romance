@@ -9,9 +9,12 @@ class UserInfoModel {
   final int gender;
   final String avatar;
   final String city;
+  final double lat;
+  final double lng;
 
   UserInfoModel({required this.id, required this.name, required this.email, required this.age,
-    required this.intro, required this.gender, required this.avatar, required this.city});
+    required this.intro, required this.gender, required this.avatar,
+    required this.city, required this.lat, required this.lng});
 
   factory UserInfoModel.fromSnapshot(DocumentSnapshot snapshot) {
     Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
@@ -23,7 +26,9 @@ class UserInfoModel {
         intro: data['intro'] ?? '',
         gender: data['gender'] ?? 0,
         avatar: data['avatar'] ?? '',
-        city: data['city'] ?? '-'
+        city: data['city'] ?? '-',
+        lat: data['lat'] ?? 0.0,
+        lng: data['lng'] ?? 0.0
     );
   }
 
@@ -36,7 +41,9 @@ class UserInfoModel {
         intro: '',
         gender: 0,
         avatar: '',
-        city: '-'
+        city: '-',
+        lat: 0.0,
+        lng: 0.0
     );
   }
 
@@ -49,7 +56,9 @@ class UserInfoModel {
       "intro": intro,
       "gender": gender,
       "avatar": avatar,
-      "city": city
+      "city": city,
+      "lat": lat,
+      "lng": lng
     };
   }
 }

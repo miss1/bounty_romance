@@ -53,7 +53,7 @@ class _EditProfilePage extends State<EditProfilePage> {
   Future<void> updateUserProfile(BuildContext context) async {
     UserInfoModel newInfo = UserInfoModel(id: '', name: _nameController.text,
         email: '', age: _ageController.text, intro: _introController.text,
-        gender: genderIdx, avatar: avatarUrl, city: '');
+        gender: genderIdx, avatar: avatarUrl, city: '', lat: 0.0, lng: 0.0);
     try {
       await context.read<FireStoreService>().updateUserProfile(newInfo);
       setState(() {updateErrorMsg = '';});
