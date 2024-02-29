@@ -1,7 +1,9 @@
+
 import 'package:bounty_romance/common/data.dart';
 import 'package:bounty_romance/common/firebase_options.dart';
 import 'package:bounty_romance/common/router.dart';
 import 'package:bounty_romance/common/nav_notifier.dart';
+import 'package:bounty_romance/widget_profile.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
@@ -24,10 +26,8 @@ import 'full_coverage_test.mocks.dart';
 @GenerateMocks([FireStoreService])
 
 void main() {
-  // setUpAll(() async {
-  //   // Initialize Firebase
-  //   await Firebase.initializeApp();
-  // });
+  // Create a mock FirebaseAuth instance
+  final FireStoreService mockFireStoreService = MockFireStoreService();
 
   testWidgets('login page: tap clear icon', (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(
@@ -198,15 +198,10 @@ void main() {
     expect(userInfoMap['city'], 'New York');
   });
 
-  // test if all profile page widget
-  testWidgets('AllProfilePage Test', (WidgetTester tester) async {
-    // Create a mock FirebaseAuth instance
-    final FireStoreService mockFireStoreService = MockFireStoreService();
-
-    // Replace the real FirebaseAuth instance with the mock instance
-    // define a usermodel
+  // test all profile page widget
+  testWidgets('AllProfilePage: no user Test', (WidgetTester tester) async {
     when(mockFireStoreService.getUsers()).thenAnswer((_) async => Future.value([]));
-
+    when(mockFireStoreService.getCurrentUid()).thenAnswer((_) => "0");
     // Build the widget
     // await tester.pumpWidget(
     //   Provider.value<FireStoreService>(
@@ -229,6 +224,54 @@ void main() {
 
     await tester.pumpAndSettle();
     // validate
+    expect(find.text('No user found!'), findsOneWidget);
     expect(find.byType(AllProfilesPage), findsOneWidget);
+    expect(find.byType(Image), findsNothing);
+    expect(find.byType(PageView), findsNothing);
+  });
+
+  // test all profile page widget - has users
+  testWidgets('AllProfilePage: one user Test', (WidgetTester tester) async {
+    UserInfoModel user = UserInfoModel(
+        id: '0',
+        name: 'Kimmy',
+        email: 'test1@gmail.com',
+        age: '29',
+        intro: 'love me',
+        gender: 0,
+        avatar: '',
+        city: ''
+    );
+    when(mockFireStoreService.getUsers()).thenAnswer((_) async => Future.value([user]));
+    when(mockFireStoreService.getCurrentUid()).thenAnswer((_) => "0");
+
+    await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (context) => NavNotifier(),
+            ),
+            Provider(create: (context) => mockFireStoreService),
+          ],
+          child: const MaterialApp(home: AllProfilesPage()),
+        )
+    );
+    await tester.pumpAndSettle();
+
+    // validate
+    expect(find.text('Kimmy'), findsOneWidget);
+    expect(find.text('29'), findsOneWidget);
+    expect(find.byType(AllProfilesPage), findsOneWidget);
+    expect(find.byType(PageView), findsNothing);
+    expect(find.byType(Card), findsOneWidget);
+    expect(find.byType(Column), findsOneWidget);
+    expect(find.byType(Image), findsOneWidget);
+
+
+    // // tap the profile
+    await tester.tap(find.byType(Card));
+    await tester.pumpAndSettle();
+    expect(find.byType(UserProfilePage), findsOneWidget);
+    expect(find.byType(UserProfile), findsOneWidget);
   });
 }
