@@ -345,4 +345,28 @@ void main() {
     expect(find.text('Kimmy'), findsOneWidget);
     expect(find.byType(UserProfilePage), findsOneWidget);
   });
+
+  testWidgets('Home nav bar', (WidgetTester tester) async {
+    UserInfoModel user = getMockUserInfo();
+
+    when(mockFireStoreService.getUsers()).thenAnswer((_) async => Future.value([user]));
+    when(mockFireStoreService.getCurrentUid()).thenAnswer((_) => "1");
+
+    await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (context) => NavNotifier(),
+            ),
+            Provider(create: (context) => mockFireStoreService),
+          ],
+          child: const MaterialApp(home: HomePageNavBar(child: AllProfilesPage())),
+        )
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AllProfilesPage), findsOneWidget);
+    expect(find.text('Kimmy'), findsOneWidget);
+    expect(find.byType(HomePageNavBar), findsOneWidget);
+  });
 }
