@@ -24,6 +24,8 @@ This project is a starting point for a Flutter application.
 * test: over 30% code coverage - finished
 
 ## Milestone 2
-* Manage dating profile
-* Display individual profile
-* Generalizing location
+* Manage dating profile - finished
+* Display individual profile - finished
+* Select image, cropped and upload it to firebase - finished
+* Display map and update location - finished
+* test: over 45% code coverage - finished
