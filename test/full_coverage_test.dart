@@ -201,7 +201,7 @@ void main() {
   // test if all profile page widget
   testWidgets('AllProfilePage Test', (WidgetTester tester) async {
     // Create a mock FirebaseAuth instance
-    final MockFireStoreService mockFireStoreService = MockFireStoreService();
+    final FireStoreService mockFireStoreService = MockFireStoreService();
 
     // Replace the real FirebaseAuth instance with the mock instance
     // define a usermodel
@@ -209,7 +209,7 @@ void main() {
 
     // Build the widget
     // await tester.pumpWidget(
-    //   Provider.value(
+    //   Provider.value<FireStoreService>(
     //     value: mockFireStoreService,
     //     child: const MaterialApp(home: AllProfilesPage(),),
     //   )
@@ -218,12 +218,16 @@ void main() {
     await tester.pumpWidget(
         MultiProvider(
             providers: [
-              Provider(create: (context) => mockFireStoreService,),
+              ChangeNotifierProvider(
+                create: (context) => NavNotifier(),
+              ),
+              Provider(create: (context) => mockFireStoreService),
             ],
             child: const MaterialApp(home: AllProfilesPage()),
         )
     );
 
+    await tester.pumpAndSettle();
     // validate
     expect(find.byType(AllProfilesPage), findsOneWidget);
   });
