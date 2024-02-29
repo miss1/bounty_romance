@@ -18,6 +18,8 @@ class _UploadImage extends State<UploadImage> {
 
   File? imageFile;
 
+  bool isLoading = false;
+
   Future<void> getImageFromGallery() async {
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
 
@@ -77,16 +79,19 @@ class _UploadImage extends State<UploadImage> {
 
   Future<void> uploadImageToFirebase() async {
     if (imageFile != null) {
+      setState(() { isLoading = true; });
       try {
         String extension = path.extension(imageFile!.path);
         Reference firebaseStorageRef = FirebaseStorage.instance.ref().child('images/${DateTime.now()}$extension');
         UploadTask uploadTask = firebaseStorageRef.putFile(imageFile!);
         await uploadTask.whenComplete(() async {
           final newImageUrl = await firebaseStorageRef.getDownloadURL();
+          setState(() { isLoading = false; });
           if (context.mounted) GoRouter.of(context).pop(newImageUrl);
         });
       } catch (e) {
         print('Error uploading image to Firebase Storage: $e');
+        setState(() { isLoading = false; });
       }
     }
   }
@@ -147,6 +152,7 @@ class _UploadImage extends State<UploadImage> {
                 onPressed: imageFile != null ? uploadImageToFirebase : null,
                 child: const Text('Submit'),
               ),
+              if (isLoading) const CircularProgressIndicator(),
             ],
           )
         ),

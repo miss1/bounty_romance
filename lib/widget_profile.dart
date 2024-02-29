@@ -163,7 +163,8 @@ class _UserProfile extends State<UserProfile> {
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.8,
             child: _actionWidget(),
-          )
+          ),
+          const SizedBox(height: 20),
         ],
       ),
     );
