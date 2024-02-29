@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'common/db.dart';
 import 'common/data.dart';
+import 'package:provider/provider.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -28,8 +29,8 @@ class _EditProfilePage extends State<EditProfilePage> {
   }
 
   Future<void> getCurrentUserInfo() async {
-    String id = FireStoreService.getCurrentUid();
-    UserInfoModel info = await FireStoreService.getUserInfo(id);
+    String id = context.read<FireStoreService>().getCurrentUid();
+    UserInfoModel info = await context.read<FireStoreService>().getUserInfo(id);
     setState(() {
       avatarUrl = info.avatar;
       genderIdx = info.gender;
@@ -54,7 +55,7 @@ class _EditProfilePage extends State<EditProfilePage> {
         email: '', age: _ageController.text, intro: _introController.text,
         gender: genderIdx, avatar: avatarUrl, city: '');
     try {
-      await FireStoreService.updateUserProfile(newInfo);
+      await context.read<FireStoreService>().updateUserProfile(newInfo);
       setState(() {updateErrorMsg = '';});
       if (context.mounted) GoRouter.of(context).pop('success');
     } catch (e) {

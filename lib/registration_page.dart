@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'common/db.dart';
 import 'common/data.dart';
 import 'package:email_validator/email_validator.dart';
@@ -51,7 +52,7 @@ class _RegistrationState extends State<RegistrationPage> {
           avatar: avatarUrl,
           city: '-'
       );
-      await FireStoreService.createUser(userInfo);
+      await context.read<FireStoreService>().createUser(userInfo);
 
       setState(() {registerErrorMsg = '';});
       _emailController.clear();

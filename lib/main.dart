@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'common/db.dart';
 import 'common/firebase_options.dart';
 
 import 'package:bounty_romance/common/nav_notifier.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => NavNotifier(),
         ),
+        Provider(create: (context) => FireStoreService(),),
       ],
       child: Builder(
         builder: (context) {

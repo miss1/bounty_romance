@@ -24,11 +24,11 @@ class _AllProfilesState extends State<AllProfilesPage> {
   }
 
   Future<void> getAllUsers() async {
-    List<UserInfoModel> usersData = await FireStoreService.getUsers();
+    List<UserInfoModel> usersData = await context.read<FireStoreService>().getUsers();
     if (context.mounted) context.read<NavNotifier>().changeNavBar(0);
     setState(() {
       userList = usersData;
-      String id = FireStoreService.getCurrentUid();
+      String id = context.read<FireStoreService>().getCurrentUid();
       userList.removeWhere((item) => item.id == id);
     });
     print(userList);
@@ -90,25 +90,6 @@ class _AllProfilesState extends State<AllProfilesPage> {
           ),
         ),
       )).toList(),
-    );
-
-
-    return Container(
-      color: Colors.white,
-      child: ListView.builder(
-          padding: const EdgeInsets.all(8),
-          itemCount: userList.length,
-          itemBuilder: (BuildContext context, int index) {
-            return ListTile(
-              leading: _imageWidget(userList[index].avatar),
-              title: Text(userList[index].name),
-              subtitle: Text(userList[index].intro),
-              onTap: () {
-                GoRouter.of(context).push('/userProfile', extra: userList[index].id);
-              },
-            );
-          }
-      ),
     );
   }
 }

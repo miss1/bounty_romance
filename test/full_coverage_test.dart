@@ -1,6 +1,9 @@
 import 'package:bounty_romance/common/data.dart';
+import 'package:bounty_romance/common/firebase_options.dart';
 import 'package:bounty_romance/common/router.dart';
 import 'package:bounty_romance/common/nav_notifier.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 // ignore_for_file: unused_import
 import 'package:flutter/material.dart';
@@ -14,6 +17,11 @@ import 'package:bounty_romance/home_nav_bar.dart';
 import 'package:bounty_romance/user_profile_page.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'full_coverage_test.mocks.dart';
+
+// Mock Firebase
+@GenerateMocks([FireStoreService])
 
 void main() {
   // setUpAll(() async {
@@ -192,19 +200,29 @@ void main() {
 
   // test if all profile page widget
   testWidgets('AllProfilePage Test', (WidgetTester tester) async {
-    await Firebase.initializeApp();
-    await tester.pumpWidget(
-        const MaterialApp(
-      home: LoginPage(),
-    ));
-    final username = find.byKey(const Key("email"));
-    final password = find.byKey(const Key('password'));
-    final loginBt = find.byType(ElevatedButton);
+    // Create a mock FirebaseAuth instance
+    final MockFireStoreService mockFireStoreService = MockFireStoreService();
 
-    // action: enter an existing email and password, click sign in button
-    await tester.enterText(username, 'test1@gamil.com');
-    await tester.enterText(password, '12345678');
-    await tester.tap(loginBt);
+    // Replace the real FirebaseAuth instance with the mock instance
+    // define a usermodel
+    when(mockFireStoreService.getUsers()).thenAnswer((_) async => Future.value([]));
+
+    // Build the widget
+    // await tester.pumpWidget(
+    //   Provider.value(
+    //     value: mockFireStoreService,
+    //     child: const MaterialApp(home: AllProfilesPage(),),
+    //   )
+    // );
+
+    await tester.pumpWidget(
+        MultiProvider(
+            providers: [
+              Provider(create: (context) => mockFireStoreService,),
+            ],
+            child: const MaterialApp(home: AllProfilesPage()),
+        )
+    );
 
     // validate
     expect(find.byType(AllProfilesPage), findsOneWidget);

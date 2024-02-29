@@ -28,9 +28,9 @@ class _UserProfile extends State<UserProfile> {
   Future<void> getUserInfo() async {
     String id = widget.uid;
     if (id == '') {
-      id = FireStoreService.getCurrentUid();
+      id = context.read<FireStoreService>().getCurrentUid();
     }
-    UserInfoModel info = await FireStoreService.getUserInfo(id);
+    UserInfoModel info = await context.read<FireStoreService>().getUserInfo(id);
     if (widget.uid == '' && context.mounted) context.read<NavNotifier>().changeNavBar(1);
     setState(() {
       userInfo = info;
