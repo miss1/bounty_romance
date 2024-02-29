@@ -31,7 +31,6 @@ class _AllProfilesState extends State<AllProfilesPage> {
       String id = context.read<FireStoreService>().getCurrentUid();
       userList.removeWhere((item) => item.id == id);
     });
-    print(userList);
   }
 
   Widget _imageWidget(avatar) {
@@ -43,6 +42,18 @@ class _AllProfilesState extends State<AllProfilesPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (userList.isEmpty) {
+      return const Center(
+        child: Text(
+          "No user found!",
+          style: TextStyle(
+            color: Colors.red,
+            fontWeight: FontWeight.bold,
+            fontSize: 32,
+          ),
+        ),
+      );
+    }
     return PageView(
       controller: controller,
       children: userList.map((e) => Center(
