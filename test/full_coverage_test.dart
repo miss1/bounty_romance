@@ -5,6 +5,7 @@ import 'package:bounty_romance/common/router.dart';
 import 'package:bounty_romance/common/nav_notifier.dart';
 import 'package:bounty_romance/edit_profile_page.dart';
 import 'package:bounty_romance/widget_profile.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -28,6 +29,10 @@ import 'full_coverage_test.mocks.dart';
 // Mock Firebase
 @GenerateMocks([FireStoreService])
 
+class MockGoRouter extends Mock {
+  void push(String route, {String extra});
+}
+
 UserInfoModel getMockUserInfo () {
   return UserInfoModel(
       id: '0',
@@ -46,6 +51,7 @@ UserInfoModel getMockUserInfo () {
 void main() {
   // Create a mock FirebaseAuth instance
   final FireStoreService mockFireStoreService = MockFireStoreService();
+  MockGoRouter mockGoRouter;
 
   testWidgets('login page: tap clear icon', (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(
@@ -242,9 +248,28 @@ void main() {
   // test all profile page widget - has users
   testWidgets('AllProfilePage: one user Test', (WidgetTester tester) async {
     UserInfoModel user = getMockUserInfo();
+    //mockGoRouter = MockGoRouter();
 
     when(mockFireStoreService.getUsers()).thenAnswer((_) async => Future.value([user]));
     when(mockFireStoreService.getCurrentUid()).thenAnswer((_) => "1");
+    when(mockFireStoreService.getUserInfo('0')).thenAnswer((_) => Future.value(user));
+
+    final goRouter = GoRouter(
+      initialLocation: '/home', // Start at '/home'// Adjust routerNeglect as needed
+      routes: [
+        GoRoute(
+          path: '/home',
+          builder: (context, state) => const AllProfilesPage(),
+        ),
+        GoRoute(
+            path: '/userProfile',
+            builder: (context, state) {
+              String userId = state.extra as String;
+              return UserProfilePage(uid: userId);
+            }
+        ),
+      ],
+    );
 
     await tester.pumpWidget(
         MultiProvider(
@@ -254,10 +279,35 @@ void main() {
             ),
             Provider(create: (context) => mockFireStoreService),
           ],
-          child: const MaterialApp(home: AllProfilesPage()),
+          child: Builder(
+              builder: (context) {
+                return MaterialApp.router(
+                  title: 'Bounty Romance',
+                  theme: ThemeData(
+                    colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+                    useMaterial3: true,
+                  ),
+                  routerConfig: goRouter,
+                );
+              }
+          ),
         )
     );
     await tester.pumpAndSettle();
+
+
+    // await tester.pumpWidget(
+    //     MultiProvider(
+    //       providers: [
+    //         ChangeNotifierProvider(
+    //           create: (context) => NavNotifier(),
+    //         ),
+    //         Provider(create: (context) => mockFireStoreService),
+    //       ],
+    //       child: const MaterialApp(home: AllProfilesPage()),
+    //     )
+    // );
+    // await tester.pumpAndSettle();
 
     // validate
     expect(find.text('Kimmy'), findsOneWidget);
@@ -268,12 +318,13 @@ void main() {
     expect(find.byType(Column), findsOneWidget);
     expect(find.byType(Image), findsOneWidget);
 
-
-    // // tap the profile
-    // await tester.tap(find.byType(Card));
-    // await tester.pumpAndSettle();
-    // expect(find.byType(UserProfilePage), findsOneWidget);
-    // expect(find.byType(UserProfile), findsOneWidget);
+    // tap the profile
+    await tester.tap(find.byType(Card));
+    await tester.pumpAndSettle();
+    // // Verify if GoRouter.of(context).push() is called with the correct arguments
+    // verify(mockGoRouter.push('/userProfile', extra: '0')).called(1);
+    expect(find.byType(UserProfilePage), findsOneWidget);
+    expect(find.byType(UserProfile), findsOneWidget);
   });
 
   testWidgets('load map page', (WidgetTester tester) async {
