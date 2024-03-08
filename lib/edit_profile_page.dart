@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'common/db.dart';
-import 'common/data.dart';
+import 'common/userinfo_model.dart';
 import 'package:provider/provider.dart';
 
 class EditProfilePage extends StatefulWidget {

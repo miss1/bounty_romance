@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import 'common/data.dart';
+import 'common/userinfo_model.dart';
 import 'common/db.dart';
 import 'common/nav_notifier.dart';
 
@@ -44,6 +45,17 @@ class _UserProfile extends State<UserProfile> {
     }
   }
 
+  Future<void> sendLikeRequest() async {
+    EasyLoading.show(status: 'loading...');
+    try {
+      await context.read<FireStoreService>().addLikeRequest(widget.uid);
+      EasyLoading.showSuccess('Request sent successfully');
+    } catch(e) {
+      print(e);
+      EasyLoading.showError('Failed with Error');
+    }
+  }
+
   Future<void> showLocation() async {
     final result = await GoRouter.of(context).push(
       Uri(
@@ -74,6 +86,8 @@ class _UserProfile extends State<UserProfile> {
       onPressed: () {
         if (widget.pageType == 'me') {
           editProfile();
+        } else {
+          sendLikeRequest();
         }
       },
       style: ButtonStyle(

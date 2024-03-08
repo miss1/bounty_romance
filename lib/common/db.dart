@@ -1,7 +1,7 @@
 import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:bounty_romance/common/data.dart';
+import 'package:bounty_romance/common/userinfo_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FireStoreService {
@@ -51,6 +51,20 @@ class FireStoreService {
       'city': city,
       'lat': lat,
       'lng': lng
+    });
+  }
+
+  Future<void> addLikeRequest(String id) async {
+    String uid = getCurrentUid();
+    UserInfoModel currentUser = await getUserInfo(uid);
+
+    DocumentReference documentReference = _firestore.collection('like_request').doc(id)
+        .collection('sender').doc(uid);
+
+    await documentReference.set({
+      'id': uid,
+      'name': currentUser.name,
+      'avatar': currentUser.avatar
     });
   }
 

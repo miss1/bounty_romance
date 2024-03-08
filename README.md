@@ -29,3 +29,7 @@ This project is a starting point for a Flutter application.
 * Select image, cropped and upload it to firebase - finished
 * Display map and update location - finished
 * test: over 45% code coverage - finished
+
+# Group Project Completed
+* Matching with other users
+* Chat feature

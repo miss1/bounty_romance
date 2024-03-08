@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'common/db.dart';
-import 'common/data.dart';
+import 'common/userinfo_model.dart';
 import 'package:email_validator/email_validator.dart';
 
 class RegistrationPage extends StatefulWidget {

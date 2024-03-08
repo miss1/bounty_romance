@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'common/data.dart';
+import 'common/userinfo_model.dart';
 import 'common/db.dart';
 import 'common/nav_notifier.dart';
 

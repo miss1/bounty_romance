@@ -1,5 +1,5 @@
 
-import 'package:bounty_romance/common/data.dart';
+import 'package:bounty_romance/common/userinfo_model.dart';
 import 'package:bounty_romance/common/firebase_options.dart';
 import 'package:bounty_romance/common/router.dart';
 import 'package:bounty_romance/common/nav_notifier.dart';

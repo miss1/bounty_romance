@@ -8,6 +8,7 @@ import 'common/firebase_options.dart';
 import 'package:bounty_romance/common/nav_notifier.dart';
 
 import 'common/router.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
             ),
+            builder: EasyLoading.init(),
             routerConfig: router,
           );
         }
