@@ -1,4 +1,6 @@
+import 'package:bounty_romance/common/userinfo_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -6,6 +8,27 @@ import 'common/db.dart';
 
 class LikeRequestPage extends StatelessWidget {
   const LikeRequestPage({super.key});
+
+  Future<void> deleteOneRequest(BuildContext context, String id) async {
+    try {
+      EasyLoading.show(status: 'loading...');
+      await context.read<FireStoreService>().deleteLikeRequest(id);
+      EasyLoading.showSuccess('Reject the Request successfully');
+    } catch (e) {
+      EasyLoading.showError('Failed with Error');
+    }
+  }
+
+  Future<void> acceptOneRequest(BuildContext context, UserInfoModel user) async {
+    try {
+      EasyLoading.show(status: 'loading...');
+      await context.read<FireStoreService>().addConnection(user);
+      if (context.mounted) await context.read<FireStoreService>().deleteLikeRequest(user.id);
+      EasyLoading.showSuccess('Accept the Request successfully');
+    } catch (e) {
+      EasyLoading.showError('Failed with Error');
+    }
+  }
 
   Widget _imageWidget(avatar) {
     if (avatar != '') {
@@ -47,8 +70,8 @@ class LikeRequestPage extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       ElevatedButton(
-                        onPressed: () {
-                          print('Accept');
+                        onPressed: () async {
+                          acceptOneRequest(context, doc);
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(Colors.green),
@@ -58,8 +81,8 @@ class LikeRequestPage extends StatelessWidget {
                       ),
                       const SizedBox(width: 5,),
                       ElevatedButton(
-                        onPressed: () {
-                          print('Reject');
+                        onPressed: () async {
+                          deleteOneRequest(context, doc.id);
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(Colors.red),

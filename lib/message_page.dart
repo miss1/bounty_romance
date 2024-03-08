@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import 'common/db.dart';
 import 'common/nav_notifier.dart';
 
 class MessagePage extends StatelessWidget {
@@ -49,22 +50,38 @@ class LikesPanel extends StatelessWidget {
   }
 }
 
-class MessageList extends StatefulWidget {
+class MessageList extends StatelessWidget {
   const MessageList({super.key});
 
-  @override
-  State<MessageList> createState() => _MessageList();
-}
-
-class _MessageList extends State<MessageList> {
-  @override
-  void initState() {
-    super.initState();
-    // if (context.mounted) context.read<NavNotifier>().changeNavBar(1);
+  Widget _imageWidget(avatar) {
+    if (avatar != '') {
+      return Image.network(avatar, width: 60, height: 60, fit: BoxFit.cover,);
+    }
+    return Image.asset('assets/default.jpg', width: 60, height: 60, fit: BoxFit.cover,);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Text('Message');
+    return StreamBuilder(
+      stream: context.read<FireStoreService>().getAllConnections(),
+      builder: (context, streamSnapshot) {
+        if(streamSnapshot.hasData) {
+          final queryResults = streamSnapshot.data!;
+          if (queryResults.isEmpty) {
+            return const Center(
+              child: Text('No friends', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32,))
+            );
+          }
+          return ListView(
+            shrinkWrap: true,
+            children: queryResults.map<ListTile>((doc) => ListTile(
+              leading: _imageWidget(doc.avatar),
+              title: Text(doc.name),
+            )).toList(),
+          );
+        }
+        return const Center(child: CircularProgressIndicator(),);
+      }
+    );
   }
 }

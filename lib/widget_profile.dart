@@ -48,8 +48,13 @@ class _UserProfile extends State<UserProfile> {
   Future<void> sendLikeRequest() async {
     EasyLoading.show(status: 'loading...');
     try {
-      await context.read<FireStoreService>().addLikeRequest(widget.uid);
-      EasyLoading.showSuccess('Request sent successfully');
+      bool isAlreadyConnect = await context.read<FireStoreService>().checkConnectionStatus(widget.uid);
+      if (isAlreadyConnect) {
+        EasyLoading.showInfo('You have already connected with this user.');
+      } else if (context.mounted){
+        await context.read<FireStoreService>().addLikeRequest(widget.uid);
+        EasyLoading.showSuccess('Request sent successfully');
+      }
     } catch(e) {
       print(e);
       EasyLoading.showError('Failed with Error');

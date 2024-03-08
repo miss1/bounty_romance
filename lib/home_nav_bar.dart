@@ -23,6 +23,7 @@ class _HomePageNavBar extends State<HomePageNavBar> {
 
   void onItemTapped(BuildContext context, int index) {
     if (index == context.read<NavNotifier>().currentIndex) return;
+    if (index == 1) context.read<NavNotifier>().changeNavBar(1);
     GoRouter.of(context).go(pages[index]);
   }
 
