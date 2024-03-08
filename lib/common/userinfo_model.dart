@@ -21,7 +21,7 @@ class UserInfoModel {
     return UserInfoModel(
         id: data['id'],
         name: data['name'] ?? '',
-        email: data['email'],
+        email: data['email'] ?? '',
         age: data['age'] ?? '0',
         intro: data['intro'] ?? '',
         gender: data['gender'] ?? 0,

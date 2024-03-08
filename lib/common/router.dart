@@ -11,6 +11,8 @@ import 'package:bounty_romance/my_profile_page.dart';
 import 'package:bounty_romance/user_profile_page.dart';
 import 'package:bounty_romance/edit_profile_page.dart';
 import 'package:bounty_romance/map_page.dart';
+import 'package:bounty_romance/message_page.dart';
+import 'package:bounty_romance/like_request_page.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -61,6 +63,12 @@ final GoRouter router = GoRouter(
           return MapPage(type: type, center: location);
         }
     ),
+    GoRoute(
+        path: '/likeRequest',
+        builder: (context, state) {
+          return const LikeRequestPage();
+        }
+    ),
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
       builder: (context, state, child) {
@@ -75,6 +83,13 @@ final GoRouter router = GoRouter(
           parentNavigatorKey: _shellNavigatorKey,
           builder: (context, state) {
             return const AllProfilesPage();
+          }
+        ),
+        GoRoute(
+          path: '/messages',
+          parentNavigatorKey: _shellNavigatorKey,
+          builder: (context, state) {
+            return const MessagePage();
           }
         ),
         GoRoute(

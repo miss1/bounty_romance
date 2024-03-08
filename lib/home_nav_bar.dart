@@ -14,7 +14,7 @@ class HomePageNavBar extends StatefulWidget {
 }
 
 class _HomePageNavBar extends State<HomePageNavBar> {
-  static const List pages = ['/home', '/myProfile'];
+  static const List pages = ['/home', '/messages', '/myProfile'];
 
   Future<void> logoutFn(context) async {
     await FirebaseAuth.instance.signOut();
@@ -47,6 +47,10 @@ class _HomePageNavBar extends State<HomePageNavBar> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            label: 'Messages',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.people),

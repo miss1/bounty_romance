@@ -32,7 +32,7 @@ class _UserProfile extends State<UserProfile> {
       id = context.read<FireStoreService>().getCurrentUid();
     }
     UserInfoModel info = await context.read<FireStoreService>().getUserInfo(id);
-    if (widget.uid == '' && context.mounted) context.read<NavNotifier>().changeNavBar(1);
+    if (widget.uid == '' && context.mounted) context.read<NavNotifier>().changeNavBar(2);
     setState(() {
       userInfo = info;
     });

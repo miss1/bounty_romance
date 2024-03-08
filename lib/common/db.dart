@@ -68,6 +68,23 @@ class FireStoreService {
     });
   }
 
+  Stream<List<UserInfoModel>> getLikeRequests() {
+    String uid = getCurrentUid();
+    return _firestore.collection("like_request").doc(uid).collection('sender')
+        .snapshots()
+        .map((snapshot) =>
+        _snapshotsRequestItem(snapshot.docs)
+    );
+  }
+
+  List<UserInfoModel> _snapshotsRequestItem(List<QueryDocumentSnapshot<Map<String, dynamic>>> snapshots) {
+    return snapshots.map(_snapshotRequestItem).toList();
+  }
+
+  UserInfoModel _snapshotRequestItem(QueryDocumentSnapshot<Map<String, dynamic>> snapshot) {
+    return UserInfoModel.fromSnapshot(snapshot);
+  }
+
   String getCurrentUid() {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user = auth.currentUser;
