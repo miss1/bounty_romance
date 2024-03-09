@@ -11,6 +11,7 @@ import 'package:bounty_romance/my_profile_page.dart';
 import 'package:bounty_romance/user_profile_page.dart';
 import 'package:bounty_romance/edit_profile_page.dart';
 import 'package:bounty_romance/map_page.dart';
+import 'package:bounty_romance/message_list_page.dart';
 import 'package:bounty_romance/message_page.dart';
 import 'package:bounty_romance/like_request_page.dart';
 
@@ -69,6 +70,14 @@ final GoRouter router = GoRouter(
           return const LikeRequestPage();
         }
     ),
+    GoRoute(
+        path: '/chat',
+        builder: (context, state) {
+          final msgId = state.uri.queryParameters['id'] ?? '';
+          final name = state.uri.queryParameters['name'] ?? '';
+          return MessagePage(msgId: msgId, name: name);
+        }
+    ),
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
       builder: (context, state, child) {
@@ -89,7 +98,7 @@ final GoRouter router = GoRouter(
           path: '/messages',
           parentNavigatorKey: _shellNavigatorKey,
           builder: (context, state) {
-            return const MessagePage();
+            return const MessageListPage();
           }
         ),
         GoRoute(

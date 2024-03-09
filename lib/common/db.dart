@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:bounty_romance/common/userinfo_model.dart';
 import 'package:bounty_romance/common/connection_model.dart';
+import 'package:bounty_romance/common/message_model.dart';
 
 class FireStoreService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -170,6 +171,25 @@ class FireStoreService {
     return ConnectionModel.fromSnapshot(snapshot);
   }
 
+  // Get Chat history with one user
+  Stream<List<MessageModel>> getChatHistory(String msgId) {
+    return _firestore.collection("message").doc(msgId).collection('info')
+        .orderBy('time', descending: true)
+        .snapshots()
+        .map((snapshot) =>
+        _snapshotsChatItem(snapshot.docs)
+    );
+  }
+
+  List<MessageModel> _snapshotsChatItem(List<QueryDocumentSnapshot<Map<String, dynamic>>> snapshots) {
+    return snapshots.map(_snapshotChatItem).toList();
+  }
+
+  MessageModel _snapshotChatItem(QueryDocumentSnapshot<Map<String, dynamic>> snapshot) {
+    return MessageModel.fromSnapshot(snapshot);
+  }
+
+  // Get current user id
   String getCurrentUid() {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user = auth.currentUser;
