@@ -174,7 +174,6 @@ class FireStoreService {
   // Get Chat history with one user
   Stream<List<MessageModel>> getChatHistory(String msgId) {
     return _firestore.collection("message").doc(msgId).collection('info')
-        .orderBy('time', descending: true)
         .snapshots()
         .map((snapshot) =>
         _snapshotsChatItem(snapshot.docs)

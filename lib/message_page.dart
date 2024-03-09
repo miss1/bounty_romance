@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +28,7 @@ class MessagePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(child: InfoList( msgId: msgId,)),
-          const InputMsg()
+          InputMsg(msgId: msgId)
         ],
       ),
     );
@@ -87,7 +88,8 @@ class InfoList extends StatelessWidget {
 }
 
 class InputMsg extends StatefulWidget {
-  const InputMsg({super.key});
+  final String msgId;
+  const InputMsg({super.key, required this.msgId});
 
   @override
   State<InputMsg> createState() => _InputMsg();
@@ -96,8 +98,46 @@ class InputMsg extends StatefulWidget {
 class _InputMsg extends State<InputMsg> {
   final msgController = TextEditingController();
 
+  Future<void> sendMessage() async {
+    try {
+      if (msgController.text == '') return;
+      await context.read<FireStoreService>().sendOneMessage(widget.msgId, msgController.text);
+      msgController.clear();
+    } catch (e) {
+      EasyLoading.showError('Failed with Error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Text('input');
+    return Container (
+      color: Colors.white70,
+      height: 60,
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                key: const Key('sendMsg'),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(6.0),
+                  ),
+                ),
+                controller: msgController,
+              ),
+            ),
+            const SizedBox(width: 5,),
+            IconButton(
+              onPressed: () {
+                sendMessage();
+              },
+              icon: const Icon(Icons.send)
+            )
+          ],
+        ),
+      )
+    );
   }
 }
