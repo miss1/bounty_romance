@@ -96,6 +96,14 @@ class FireStoreService {
     );
   }
 
+  List<UserInfoModel> _snapshotsRequestItem(List<QueryDocumentSnapshot<Map<String, dynamic>>> snapshots) {
+    return snapshots.map(_snapshotRequestItem).toList();
+  }
+
+  UserInfoModel _snapshotRequestItem(QueryDocumentSnapshot<Map<String, dynamic>> snapshot) {
+    return UserInfoModel.fromSnapshot(snapshot);
+  }
+
   // check if you already sent a like request to an user
   Future<bool> checkIfLikeRequestHasBeenSent(String id) async {
     String myId = getCurrentUid();
@@ -104,17 +112,9 @@ class FireStoreService {
     DocumentSnapshot snapshot = await documentReference.get();
     if (snapshot.exists) {
       // you already sent like request to this user
-      return false;
+      return true;
     }
-    return true;
-  }
-
-  List<UserInfoModel> _snapshotsRequestItem(List<QueryDocumentSnapshot<Map<String, dynamic>>> snapshots) {
-    return snapshots.map(_snapshotRequestItem).toList();
-  }
-
-  UserInfoModel _snapshotRequestItem(QueryDocumentSnapshot<Map<String, dynamic>> snapshot) {
-    return UserInfoModel.fromSnapshot(snapshot);
+    return false;
   }
 
   // Accept a connection request

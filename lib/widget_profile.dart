@@ -51,9 +51,16 @@ class _UserProfile extends State<UserProfile> {
       bool isAlreadyConnect = await context.read<FireStoreService>().checkConnectionStatus(widget.uid);
       if (isAlreadyConnect) {
         EasyLoading.showInfo('You have already connected with this user.');
-      } else if (context.mounted){
-        await context.read<FireStoreService>().addLikeRequest(widget.uid);
-        EasyLoading.showSuccess('Request sent successfully');
+      } else if (context.mounted) {
+        bool hasSent = await context.read<FireStoreService>().checkIfLikeRequestHasBeenSent(widget.uid);
+        if (hasSent) {
+          // request has been sent already
+          EasyLoading.showError('You already sent a like request to this user');
+        } else {
+          // normal case: send request
+          await context.read<FireStoreService>().addLikeRequest(widget.uid);
+          EasyLoading.showSuccess('Request sent successfully');
+        }
       }
     } catch(e) {
       print(e);
