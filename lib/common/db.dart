@@ -62,14 +62,14 @@ class FireStoreService {
   // Send a like request
   // the person i send like request to, add me to his sender request list
   Future<void> addLikeRequest(String id) async {
-    String uid = getCurrentUid();
-    UserInfoModel currentUser = await getUserInfo(uid);
+    String myId = getCurrentUid();
+    UserInfoModel currentUser = await getUserInfo(myId);
 
     DocumentReference documentReference = _firestore.collection('like_request').doc(id)
-        .collection('sender').doc(uid);
+        .collection('sender').doc(myId);
 
     await documentReference.set({
-      'id': uid,
+      'id': myId,
       'name': currentUser.name,
       'avatar': currentUser.avatar
     });
@@ -78,9 +78,9 @@ class FireStoreService {
   // After accept or reject one connection request, we need to delete the record
   // me delete whoever (id) send the like request to me
   Future<void> deleteLikeRequest(String id) async {
-    String uid = getCurrentUid();
+    String myId = getCurrentUid();
 
-    DocumentReference documentReference = _firestore.collection('like_request').doc(uid)
+    DocumentReference documentReference = _firestore.collection('like_request').doc(myId)
         .collection('sender').doc(id);
     await documentReference.delete();
   }
