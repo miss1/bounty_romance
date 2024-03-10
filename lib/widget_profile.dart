@@ -41,7 +41,7 @@ class _UserProfile extends State<UserProfile> {
   Future<void> editProfile() async {
     final result = await GoRouter.of(context).push('/editProfile');
     if (result != null && result != '') {
-      getUserInfo();
+      getUserInfo(); // call this function to rerender the profile page with updated info
     }
   }
 

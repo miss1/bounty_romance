@@ -50,6 +50,7 @@ class _EditProfilePage extends State<EditProfilePage> {
     }
   }
 
+  // should remove id???
   Future<void> updateUserProfile(BuildContext context) async {
     UserInfoModel newInfo = UserInfoModel(id: '', name: _nameController.text,
         email: '', age: _ageController.text, intro: _introController.text,

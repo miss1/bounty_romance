@@ -60,6 +60,7 @@ class FireStoreService {
   }
 
   // Send a like request
+  // the person i send like request to, add me to his sender request list
   Future<void> addLikeRequest(String id) async {
     String uid = getCurrentUid();
     UserInfoModel currentUser = await getUserInfo(uid);
@@ -75,6 +76,7 @@ class FireStoreService {
   }
 
   // After accept or reject one connection request, we need to delete the record
+  // me delete whoever (id) send the like request to me
   Future<void> deleteLikeRequest(String id) async {
     String uid = getCurrentUid();
 
@@ -84,6 +86,7 @@ class FireStoreService {
   }
 
   // Get all like requests. (user need to decide to accept or reject)
+  // find out all users who send me like request
   Stream<List<UserInfoModel>> getLikeRequests() {
     String uid = getCurrentUid();
     return _firestore.collection("like_request").doc(uid).collection('sender')
@@ -102,12 +105,14 @@ class FireStoreService {
   }
 
   // Accept a connection request
+  // the parameter user is the other person
   Future<void> addConnection(UserInfoModel user) async {
     String uid = getCurrentUid();
     UserInfoModel currentUser = await getUserInfo(uid);
 
     String msgId = uid + user.id;
 
+    // i add the other person to my list
     DocumentReference documentReference = _firestore.collection('connection').doc(uid)
         .collection('friends').doc(user.id);
     await documentReference.set({
@@ -117,6 +122,7 @@ class FireStoreService {
       'msgId': msgId
     });
 
+    // do the same thing but it's the other person adds me to his list
     DocumentReference documentReference2 = _firestore.collection('connection').doc(user.id)
         .collection('friends').doc(uid);
     await documentReference2.set({
