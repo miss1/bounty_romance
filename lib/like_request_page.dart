@@ -1,3 +1,6 @@
+import 'dart:async';
+
+
 import 'package:bounty_romance/common/userinfo_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -33,11 +36,60 @@ class LikeRequestPage extends StatelessWidget {
     }
   }
 
-  Widget _imageWidget(avatar) {
-    if (avatar != '') {
-      return Image.network(avatar, width: 60, height: 60, fit: BoxFit.cover,);
-    }
-    return Image.asset('assets/default.jpg', width: 60, height: 60, fit: BoxFit.cover,);
+  Future<String> getUserNameById(BuildContext context, String id) async {
+    String name = await context.read<FireStoreService>().getUserNameById(id);
+    return name;
+  }
+
+  Future<String> getUserAvatarById(BuildContext context, String id) async {
+    String avatar = await context.read<FireStoreService>().getUserAvatarById(id);
+    return avatar;
+  }
+
+  Widget _imageWidget(BuildContext context, String id) {
+    return FutureBuilder<String?>(
+      future: getUserAvatarById(context, id),
+      builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // While the data is being fetched, display a loading indicator
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          // If an error occurs, display an error message
+          return Text('Error: ${snapshot.error}');
+        } else if (snapshot.hasData) {
+          // If the data is available
+          String avatar = snapshot.data!;
+          if (avatar != '') {
+            return Image.network(avatar, width: 60, height: 60, fit: BoxFit.cover,);
+          }
+          return Image.asset('assets/default.jpg', width: 60, height: 60, fit: BoxFit.cover,);
+        } else {
+          // If no data is available, display an empty text widget
+          return const Text('');
+        }
+      },
+    );
+  }
+
+  Widget _nameWidget(BuildContext context, String id) {
+    return FutureBuilder<String?>(
+      future: getUserNameById(context, id),
+      builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // While the data is being fetched, display a loading indicator
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          // If an error occurs, display an error message
+          return Text('Error: ${snapshot.error}');
+        } else if (snapshot.hasData) {
+          // If the data is available, display the user name
+          return Text(snapshot.data!);
+        } else {
+          // If no data is available, display an empty text widget
+          return const Text('');
+        }
+      },
+    );
   }
 
   @override
@@ -66,8 +118,9 @@ class LikeRequestPage extends StatelessWidget {
               return ListView(
                 shrinkWrap: true,
                 children: queryResults.map<ListTile>((doc) => ListTile(
-                  leading: _imageWidget(doc.avatar),
-                  title: Text(doc.name),
+                  leading: _imageWidget(context, doc.id),
+                  //title: Text(doc.name),
+                    title: _nameWidget(context, doc.id),
                   subtitle: const Text('Wants to connect', style: TextStyle(color: Colors.red),),
                   trailing: Wrap(
                     //mainAxisSize: MainAxisSize.min,
