@@ -96,6 +96,19 @@ class FireStoreService {
     );
   }
 
+  // check if you already sent a like request to an user
+  Future<bool> checkIfLikeRequestHasBeenSent(String id) async {
+    String myId = getCurrentUid();
+    DocumentReference documentReference = _firestore.collection('like_request').doc(id)
+        .collection('sender').doc(myId);
+    DocumentSnapshot snapshot = await documentReference.get();
+    if (snapshot.exists) {
+      // you already sent like request to this user
+      return false;
+    }
+    return true;
+  }
+
   List<UserInfoModel> _snapshotsRequestItem(List<QueryDocumentSnapshot<Map<String, dynamic>>> snapshots) {
     return snapshots.map(_snapshotRequestItem).toList();
   }
