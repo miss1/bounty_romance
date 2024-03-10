@@ -22,7 +22,10 @@ class LikeRequestPage extends StatelessWidget {
   Future<void> acceptOneRequest(BuildContext context, UserInfoModel user) async {
     try {
       EasyLoading.show(status: 'loading...');
-      await context.read<FireStoreService>().addConnection(user);
+      bool isAlreadyConnect = await context.read<FireStoreService>().checkConnectionStatus(user.id);
+      if (!isAlreadyConnect) {
+        if (context.mounted) await context.read<FireStoreService>().addConnection(user);
+      }
       if (context.mounted) await context.read<FireStoreService>().deleteLikeRequest(user.id);
       EasyLoading.showSuccess('Accept the Request successfully');
     } catch (e) {
