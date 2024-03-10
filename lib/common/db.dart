@@ -107,13 +107,13 @@ class FireStoreService {
   // Accept a connection request
   // the parameter user is the other person
   Future<void> addConnection(UserInfoModel user) async {
-    String uid = getCurrentUid();
-    UserInfoModel currentUser = await getUserInfo(uid);
+    String myId = getCurrentUid();
+    UserInfoModel currentUser = await getUserInfo(myId);
 
-    String msgId = uid + user.id;
+    String msgId = myId + user.id;
 
     // i add the other person to my list
-    DocumentReference documentReference = _firestore.collection('connection').doc(uid)
+    DocumentReference documentReference = _firestore.collection('connection').doc(myId)
         .collection('friends').doc(user.id);
     await documentReference.set({
       'id': user.id,
@@ -124,7 +124,7 @@ class FireStoreService {
 
     // do the same thing but it's the other person adds me to his list
     DocumentReference documentReference2 = _firestore.collection('connection').doc(user.id)
-        .collection('friends').doc(uid);
+        .collection('friends').doc(myId);
     await documentReference2.set({
       'id': currentUser.id,
       'name': currentUser.name,
