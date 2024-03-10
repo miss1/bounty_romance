@@ -61,4 +61,20 @@ class UserInfoModel {
       "lng": lng
     };
   }
+
+  // another way to create one UserInfoModel based on snapshot
+  UserInfoModel createUserInfoModel(DocumentSnapshot snapshot) {
+    return UserInfoModel(
+        id: snapshot.get('id'),
+        name: snapshot.get('name'),
+        email: snapshot.get('email'),
+        age: snapshot.get('age'),
+        intro: snapshot.get('intro'),
+        gender: snapshot.get('gender'),
+        avatar: snapshot.get('avatar') ?? '',
+        city: snapshot.get('city') ?? '',
+        lat: snapshot.get('lat') ?? '',
+        lng: snapshot.get('lng') ?? '',
+    );
+  }
 }
