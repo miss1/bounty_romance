@@ -69,8 +69,8 @@ class LikeRequestPage extends StatelessWidget {
                   leading: _imageWidget(doc.avatar),
                   title: Text(doc.name),
                   subtitle: const Text('Wants to connect', style: TextStyle(color: Colors.red),),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
+                  trailing: Wrap(
+                    //mainAxisSize: MainAxisSize.min,
                     children: [
                       ElevatedButton(
                         onPressed: () async {
