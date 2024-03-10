@@ -26,6 +26,31 @@ Widget _nameWidget(BuildContext context, String id) {
   );
 }
 
+Widget _imageWidget(BuildContext context, String id) {
+  return FutureBuilder<String?>(
+    future: context.read<FireStoreService>().getUserAvatarById(id),
+    builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        // While the data is being fetched, display a loading indicator
+        return const CircularProgressIndicator();
+      } else if (snapshot.hasError) {
+        // If an error occurs, display an error message
+        return Text('Error: ${snapshot.error}');
+      } else if (snapshot.hasData) {
+        // If the data is available
+        String avatar = snapshot.data!;
+        if (avatar != '') {
+          return Image.network(avatar, width: 60, height: 60, fit: BoxFit.cover,);
+        }
+        return Image.asset('assets/default.jpg', width: 60, height: 60, fit: BoxFit.cover,);
+      } else {
+        // If no data is available, display an empty text widget
+        return Image.asset('assets/default.jpg', width: 60, height: 60, fit: BoxFit.cover,);
+      }
+    },
+  );
+}
+
 class MessagePage extends StatelessWidget {
   final String msgId;
   final String userId;
