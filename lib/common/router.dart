@@ -73,9 +73,9 @@ final GoRouter router = GoRouter(
     GoRoute(
         path: '/chat',
         builder: (context, state) {
-          final msgId = state.uri.queryParameters['id'] ?? '';
-          final name = state.uri.queryParameters['name'] ?? '';
-          return MessagePage(msgId: msgId, name: name);
+          final msgId = state.uri.queryParameters['msgId'] ?? '';
+          final useId = state.uri.queryParameters['uid'] ?? '';
+          return MessagePage(msgId: msgId, userId: useId);
         }
     ),
     ShellRoute(
