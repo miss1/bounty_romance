@@ -65,7 +65,7 @@ class LikeRequestPage extends StatelessWidget {
           return Image.asset('assets/default.jpg', width: 60, height: 60, fit: BoxFit.cover,);
         } else {
           // If no data is available, display an empty text widget
-          return const Text('');
+          return Image.asset('assets/default.jpg', width: 60, height: 60, fit: BoxFit.cover,);
         }
       },
     );
