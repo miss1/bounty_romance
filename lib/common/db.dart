@@ -33,22 +33,22 @@ class FireStoreService {
     return UserInfoModel.generateEmpty();
   }
 
-  Future<String?> getUserNameById(String id) async {
+  Future<String> getUserNameById(String id) async {
     DocumentReference documentReference = _firestore.collection('users').doc(id);
     DocumentSnapshot snapshot = await documentReference.get();
     if (snapshot.exists) {
       return snapshot.get('name');
     }
-    return null;
+    return '';
   }
 
-  Future<String?> getUserAvatarById(String id) async {
+  Future<String> getUserAvatarById(String id) async {
     DocumentReference documentReference = _firestore.collection('users').doc(id);
     DocumentSnapshot snapshot = await documentReference.get();
     if (snapshot.exists) {
       return snapshot.get('avatar');
     }
-    return null;
+    return '';
   }
 
   // Update one's profile
