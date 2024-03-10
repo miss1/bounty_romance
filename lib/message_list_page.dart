@@ -116,6 +116,7 @@ class MessageList extends StatelessWidget {
               trailing: const Icon(Icons.keyboard_arrow_right),
               contentPadding: const EdgeInsets.all(10),
               onTap: () {
+                print('message id: ${doc.msgId}; user id: ${doc.id}');
                 GoRouter.of(context).push(
                     Uri(
                         path: '/chat',
