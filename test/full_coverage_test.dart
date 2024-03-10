@@ -1,10 +1,17 @@
 
+import 'dart:async';
+
+import 'package:bounty_romance/common/connection_model.dart';
+import 'package:bounty_romance/common/message_model.dart';
 import 'package:bounty_romance/common/userinfo_model.dart';
 import 'package:bounty_romance/common/firebase_options.dart';
 import 'package:bounty_romance/common/router.dart';
 import 'package:bounty_romance/common/nav_notifier.dart';
 import 'package:bounty_romance/edit_profile_page.dart';
+import 'package:bounty_romance/message_list_page.dart';
+import 'package:bounty_romance/message_page.dart';
 import 'package:bounty_romance/widget_profile.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mockito/annotations.dart';
@@ -419,5 +426,57 @@ void main() {
     expect(find.byType(AllProfilesPage), findsOneWidget);
     expect(find.text('Kimmy'), findsOneWidget);
     expect(find.byType(HomePageNavBar), findsOneWidget);
+  });
+
+  testWidgets('Message page', (WidgetTester tester) async {
+
+    when(mockFireStoreService.getUserNameById('0')).thenAnswer((_) async => Future.value('test'));
+    when(mockFireStoreService.getUserAvatarById('1')).thenAnswer((_) async => Future.value(''));
+    when(mockFireStoreService.getChatHistory('123')).thenAnswer((_) => Stream.value([MessageModel('1', 'ly', '', 'Hi', 0)]));
+
+    await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (context) => NavNotifier(),
+            ),
+            Provider(create: (context) => mockFireStoreService),
+          ],
+          child: const MaterialApp(
+            home: MessagePage(msgId: '123', userId: '0',),
+          ),
+        )
+    );
+
+    await tester.pumpAndSettle();
+    await tester.pump(Duration.zero);
+
+    expect(find.byType(MessagePage), findsOneWidget);
+  });
+
+  testWidgets('Message List page', (WidgetTester tester) async {
+
+    when(mockFireStoreService.getUserNameById('1')).thenAnswer((_) async => Future.value('test'));
+    when(mockFireStoreService.getUserAvatarById('1')).thenAnswer((_) async => Future.value(''));
+    when(mockFireStoreService.getAllConnections()).thenAnswer((_) => Stream.value([ConnectionModel('1', 'ly', '', '123')]));
+
+    await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (context) => NavNotifier(),
+            ),
+            Provider(create: (context) => mockFireStoreService),
+          ],
+          child: const MaterialApp(
+            home: MessageListPage(),
+          ),
+        )
+    );
+
+    await tester.pumpAndSettle();
+    await tester.pump(Duration.zero);
+
+    expect(find.byType(MessageListPage), findsOneWidget);
   });
 }

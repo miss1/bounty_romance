@@ -99,36 +99,38 @@ class MessageList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: context.read<FireStoreService>().getAllConnections(),
-      builder: (context, streamSnapshot) {
-        if(streamSnapshot.hasData) {
-          final queryResults = streamSnapshot.data!;
-          if (queryResults.isEmpty) {
-            return const Center(
-              child: Text('No friends', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32,))
+    return Material(
+      child: StreamBuilder(
+        stream: context.read<FireStoreService>().getAllConnections(),
+        builder: (context, streamSnapshot) {
+          if(streamSnapshot.hasData) {
+            final queryResults = streamSnapshot.data!;
+            if (queryResults.isEmpty) {
+              return const Center(
+                  child: Text('No friends', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32,))
+              );
+            }
+            return ListView(
+              children: queryResults.map<ListTile>((doc) => ListTile(
+                leading: ClipOval(child: _imageWidget(context, doc.id),),
+                title: _nameWidget(context, doc.id),
+                trailing: const Icon(Icons.keyboard_arrow_right),
+                contentPadding: const EdgeInsets.all(10),
+                onTap: () {
+                  print('message id: ${doc.msgId}; user id: ${doc.id}');
+                  GoRouter.of(context).push(
+                      Uri(
+                          path: '/chat',
+                          queryParameters: {'msgId': doc.msgId, 'uid': doc.id}
+                      ).toString()
+                  );
+                },
+              )).toList(),
             );
           }
-          return ListView(
-            children: queryResults.map<ListTile>((doc) => ListTile(
-              leading: ClipOval(child: _imageWidget(context, doc.id),),
-              title: _nameWidget(context, doc.id),
-              trailing: const Icon(Icons.keyboard_arrow_right),
-              contentPadding: const EdgeInsets.all(10),
-              onTap: () {
-                print('message id: ${doc.msgId}; user id: ${doc.id}');
-                GoRouter.of(context).push(
-                    Uri(
-                        path: '/chat',
-                        queryParameters: {'msgId': doc.msgId, 'uid': doc.id}
-                    ).toString()
-                );
-              },
-            )).toList(),
-          );
+          return const Center(child: CircularProgressIndicator(),);
         }
-        return const Center(child: CircularProgressIndicator(),);
-      }
+      ),
     );
   }
 }

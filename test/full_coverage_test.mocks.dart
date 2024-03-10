@@ -5,8 +5,10 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i4;
 
-import 'package:bounty_romance/common/userinfo_model.dart' as _i2;
+import 'package:bounty_romance/common/connection_model.dart' as _i6;
 import 'package:bounty_romance/common/db.dart' as _i3;
+import 'package:bounty_romance/common/message_model.dart' as _i7;
+import 'package:bounty_romance/common/userinfo_model.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i5;
 
@@ -77,6 +79,36 @@ class MockFireStoreService extends _i1.Mock implements _i3.FireStoreService {
       ) as _i4.Future<_i2.UserInfoModel>);
 
   @override
+  _i4.Future<String> getUserNameById(String? id) => (super.noSuchMethod(
+        Invocation.method(
+          #getUserNameById,
+          [id],
+        ),
+        returnValue: _i4.Future<String>.value(_i5.dummyValue<String>(
+          this,
+          Invocation.method(
+            #getUserNameById,
+            [id],
+          ),
+        )),
+      ) as _i4.Future<String>);
+
+  @override
+  _i4.Future<String> getUserAvatarById(String? id) => (super.noSuchMethod(
+        Invocation.method(
+          #getUserAvatarById,
+          [id],
+        ),
+        returnValue: _i4.Future<String>.value(_i5.dummyValue<String>(
+          this,
+          Invocation.method(
+            #getUserAvatarById,
+            [id],
+          ),
+        )),
+      ) as _i4.Future<String>);
+
+  @override
   _i4.Future<void> updateUserProfile(_i2.UserInfoModel? user) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -86,6 +118,121 @@ class MockFireStoreService extends _i1.Mock implements _i3.FireStoreService {
         returnValue: _i4.Future<void>.value(),
         returnValueForMissingStub: _i4.Future<void>.value(),
       ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> updateUserLocation(
+    String? city,
+    double? lat,
+    double? lng,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #updateUserLocation,
+          [
+            city,
+            lat,
+            lng,
+          ],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> addLikeRequest(String? id) => (super.noSuchMethod(
+        Invocation.method(
+          #addLikeRequest,
+          [id],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> deleteLikeRequest(String? id) => (super.noSuchMethod(
+        Invocation.method(
+          #deleteLikeRequest,
+          [id],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Stream<List<_i2.UserInfoModel>> getLikeRequests() => (super.noSuchMethod(
+        Invocation.method(
+          #getLikeRequests,
+          [],
+        ),
+        returnValue: _i4.Stream<List<_i2.UserInfoModel>>.empty(),
+      ) as _i4.Stream<List<_i2.UserInfoModel>>);
+
+  @override
+  _i4.Future<bool> checkIfLikeRequestHasBeenSent(String? id) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #checkIfLikeRequestHasBeenSent,
+          [id],
+        ),
+        returnValue: _i4.Future<bool>.value(false),
+      ) as _i4.Future<bool>);
+
+  @override
+  _i4.Future<void> addConnection(_i2.UserInfoModel? user) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #addConnection,
+          [user],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<bool> checkConnectionStatus(String? id) => (super.noSuchMethod(
+        Invocation.method(
+          #checkConnectionStatus,
+          [id],
+        ),
+        returnValue: _i4.Future<bool>.value(false),
+      ) as _i4.Future<bool>);
+
+  @override
+  _i4.Future<void> sendOneMessage(
+    String? msgId,
+    String? msg,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #sendOneMessage,
+          [
+            msgId,
+            msg,
+          ],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Stream<List<_i6.ConnectionModel>> getAllConnections() =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAllConnections,
+          [],
+        ),
+        returnValue: _i4.Stream<List<_i6.ConnectionModel>>.empty(),
+      ) as _i4.Stream<List<_i6.ConnectionModel>>);
+
+  @override
+  _i4.Stream<List<_i7.MessageModel>> getChatHistory(String? msgId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getChatHistory,
+          [msgId],
+        ),
+        returnValue: _i4.Stream<List<_i7.MessageModel>>.empty(),
+      ) as _i4.Stream<List<_i7.MessageModel>>);
 
   @override
   String getCurrentUid() => (super.noSuchMethod(
