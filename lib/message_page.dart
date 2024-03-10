@@ -5,17 +5,38 @@ import 'package:provider/provider.dart';
 
 import 'common/db.dart';
 
+Widget _nameWidget(BuildContext context, String id) {
+  return FutureBuilder<String?>(
+    future: context.read<FireStoreService>().getUserNameById(id),
+    builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        // While the data is being fetched, display a loading indicator
+        return const CircularProgressIndicator();
+      } else if (snapshot.hasError) {
+        // If an error occurs, display an error message
+        return Text('Error: ${snapshot.error}');
+      } else if (snapshot.hasData) {
+        // If the data is available, display the user name
+        return Text(snapshot.data!);
+      } else {
+        // If no data is available, display an empty text widget
+        return const Text('');
+      }
+    },
+  );
+}
+
 class MessagePage extends StatelessWidget {
   final String msgId;
-  final String name;
-  const MessagePage({super.key, required this.msgId, required this.name});
+  final String userId;
+  const MessagePage({super.key, required this.msgId, required this.userId});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(name),
+        title: _nameWidget(context, userId),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
