@@ -85,13 +85,6 @@ class InfoList extends StatelessWidget {
   final String msgId;
   const InfoList({super.key, required this.msgId});
 
-  Widget _imageWidget(avatar) {
-    if (avatar != '') {
-      return Image.network(avatar, width: 60, height: 60, fit: BoxFit.cover,);
-    }
-    return Image.asset('assets/default.jpg', width: 60, height: 60, fit: BoxFit.cover,);
-  }
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -110,7 +103,7 @@ class InfoList extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               child: Row(
                 children: [
-                  ClipOval(child: _imageWidget(doc.senderAvatar),),
+                  ClipOval(child: _imageWidget(context, doc.senderId),),
                   Expanded(
                     child: Card(
                       color: Colors.lightGreen,
