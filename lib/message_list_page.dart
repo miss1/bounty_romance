@@ -51,19 +51,9 @@ class LikesPanel extends StatelessWidget {
 class MessageList extends StatelessWidget {
   const MessageList({super.key});
 
-  Future<String> getUserNameById(BuildContext context, String id) async {
-    String name = await context.read<FireStoreService>().getUserNameById(id);
-    return name;
-  }
-
-  Future<String> getUserAvatarById(BuildContext context, String id) async {
-    String avatar = await context.read<FireStoreService>().getUserAvatarById(id);
-    return avatar;
-  }
-
   Widget _imageWidget(BuildContext context, String id) {
     return FutureBuilder<String?>(
-      future: getUserAvatarById(context, id),
+      future: context.read<FireStoreService>().getUserAvatarById(id),
       builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // While the data is being fetched, display a loading indicator
@@ -88,7 +78,7 @@ class MessageList extends StatelessWidget {
 
   Widget _nameWidget(BuildContext context, String id) {
     return FutureBuilder<String?>(
-      future: getUserNameById(context, id),
+      future: context.read<FireStoreService>().getUserNameById(id),
       builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // While the data is being fetched, display a loading indicator
@@ -129,7 +119,7 @@ class MessageList extends StatelessWidget {
                 GoRouter.of(context).push(
                     Uri(
                         path: '/chat',
-                        queryParameters: {'id': doc.msgId, 'name': doc.name}
+                        queryParameters: {'msgId': doc.msgId, 'uid': doc.id}
                     ).toString()
                 );
               },
