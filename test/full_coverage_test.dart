@@ -624,4 +624,28 @@ void main() {
     expect(find.text('Age can not be null'), findsOneWidget);
     expect(find.text('Intro can not be null'), findsOneWidget);
   });
+
+  testWidgets('registration page, test togglebutton action', (tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: RegistrationPage(),
+    ));
+    expect(find.byType(RegistrationPage), findsOneWidget);
+
+    // Find the toggle buttons
+    final toggleButtonsFinder = find.byType(ToggleButtons);
+
+    // Verify that there's only one ToggleButtons widget
+    expect(toggleButtonsFinder, findsOneWidget);
+    await tester.ensureVisible(toggleButtonsFinder);
+
+    // Tap the 2nd toggle button to activate it
+    await tester.tap(find.text('woman'));
+
+    // Rebuild the widget after the button tap
+    await tester.pump();
+
+    // Verify if the first toggle button is highlighted
+    final toggleButtons = tester.widget<ToggleButtons>(toggleButtonsFinder);
+    expect(toggleButtons.isSelected[1], true);
+  });
 }
