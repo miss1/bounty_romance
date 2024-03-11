@@ -31,5 +31,6 @@ This project is a starting point for a Flutter application.
 * test: over 45% code coverage - finished
 
 # Group Project Completed
-* Matching with other users
-* Chat feature
+* Matching with other users - finished
+* Chat feature - finished
+* test: over 60% code coverage - finished
