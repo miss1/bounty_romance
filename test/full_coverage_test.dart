@@ -604,4 +604,24 @@ void main() {
     // Verify that the MaterialApp is rendered
     expect(find.byType(MaterialApp), findsOneWidget);
   });
+
+  testWidgets('registration page, test validator', (WidgetTester tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: RegistrationPage(),
+    ));
+    expect(find.byType(RegistrationPage), findsOneWidget);
+
+    // Find the button widget
+    final buttonFinder = find.byType(ElevatedButton);
+    // Scroll the button into view
+    await tester.ensureVisible(buttonFinder);
+    await tester.tap(find.byType(ElevatedButton));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Nickname can not be null'), findsOneWidget);
+    expect(find.text('Please enter a valid email'), findsOneWidget);
+    expect(find.text('Password should be at least 6 characters'), findsOneWidget);
+    expect(find.text('Age can not be null'), findsOneWidget);
+    expect(find.text('Intro can not be null'), findsOneWidget);
+  });
 }
