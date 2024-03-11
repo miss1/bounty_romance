@@ -224,6 +224,7 @@ class _EditProfilePage extends State<EditProfilePage> {
 
                         Center(
                           child: ElevatedButton(
+                            key: const Key('editProfileBtn'),
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();

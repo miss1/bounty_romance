@@ -11,6 +11,7 @@ import 'package:bounty_romance/edit_profile_page.dart';
 import 'package:bounty_romance/like_request_page.dart';
 import 'package:bounty_romance/message_list_page.dart';
 import 'package:bounty_romance/message_page.dart';
+import 'package:bounty_romance/my_profile_page.dart';
 import 'package:bounty_romance/widget_profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -374,7 +375,9 @@ void main() {
           ),
           Provider(create: (context) => mockFireStoreService),
         ],
-        child: const MaterialApp(home: UserProfile(pageType: 'me', uid: '',)),
+        child: const MaterialApp(
+          home: MyProfilePage()
+        ),
       )
     );
     await tester.pumpAndSettle();
@@ -398,9 +401,32 @@ void main() {
         )
     );
     await tester.pumpAndSettle();
-
-    expect(find.text('Kimmy'), findsOneWidget);
     expect(find.byType(EditProfilePage), findsOneWidget);
+
+    // clear btn
+    expect(find.text('Kimmy'), findsOneWidget);
+    await tester.tap(find.descendant(
+      of: find.byKey(const Key('nickname')),
+      matching: find.byIcon(Icons.clear),
+    ));
+    await tester.pump();
+    expect(find.text('Kimmy'), findsNothing);
+
+    expect(find.text('29'), findsOneWidget);
+    await tester.tap(find.descendant(
+      of: find.byKey(const Key('ageTextInput')),
+      matching: find.byIcon(Icons.clear),
+    ));
+    await tester.pump();
+    expect(find.text('29'), findsNothing);
+
+    expect(find.text('love me'), findsOneWidget);
+    await tester.tap(find.descendant(
+      of: find.byKey(const Key('introTextInput')),
+      matching: find.byIcon(Icons.clear),
+    ));
+    await tester.pump();
+    expect(find.text('love me'), findsNothing);
   });
 
   testWidgets('user profile page', (WidgetTester tester) async {
