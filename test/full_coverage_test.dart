@@ -596,4 +596,12 @@ void main() {
     expect(snapMessageInfo.senderId, '0');
     expect(snapMessageInfo.senderName, 'John Doe');
   });
+
+  testWidgets('Test main() function', (WidgetTester tester) async {
+    // Build the MyApp widget
+    await tester.pumpWidget(MyApp());
+
+    // Verify that the MaterialApp is rendered
+    expect(find.byType(MaterialApp), findsOneWidget);
+  });
 }
