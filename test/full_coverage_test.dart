@@ -4,7 +4,6 @@ import 'dart:async';
 import 'package:bounty_romance/common/connection_model.dart';
 import 'package:bounty_romance/common/message_model.dart';
 import 'package:bounty_romance/common/userinfo_model.dart';
-import 'package:bounty_romance/common/firebase_options.dart';
 import 'package:bounty_romance/common/router.dart';
 import 'package:bounty_romance/common/nav_notifier.dart';
 import 'package:bounty_romance/edit_profile_page.dart';
@@ -440,13 +439,27 @@ void main() {
           providers: [
             Provider(create: (context) => mockFireStoreService),
           ],
-          child: const MaterialApp(home: UserProfilePage(uid: '0',)),
+          child: MaterialApp(
+            home: UserProfilePage(uid: '0',),
+            builder: EasyLoading.init(),
+          ),
         )
     );
     await tester.pumpAndSettle();
 
     expect(find.text('Kimmy'), findsOneWidget);
     expect(find.byType(UserProfilePage), findsOneWidget);
+
+    final listFinder = find.byType(Scrollable);
+    final itemFinder = find.byType(ElevatedButton);
+    await tester.scrollUntilVisible(
+      itemFinder,
+      500.0,
+      scrollable: listFinder,
+    );
+    when(mockFireStoreService.checkConnectionStatus('0')).thenAnswer((_) async => Future.value(false));
+    when(mockFireStoreService.checkIfLikeRequestHasBeenSent('0')).thenAnswer((_) async => Future.value(false));
+    await tester.tap(find.byType(ElevatedButton));
   });
 
   testWidgets('Home nav bar', (WidgetTester tester) async {
@@ -539,8 +552,9 @@ void main() {
             ),
             Provider(create: (context) => mockFireStoreService),
           ],
-          child: const MaterialApp(
-            home: LikeRequestPage(),
+          child: MaterialApp(
+            home: const LikeRequestPage(),
+            builder: EasyLoading.init(),
           ),
         )
     );
@@ -549,6 +563,11 @@ void main() {
     await tester.pump(Duration.zero);
 
     expect(find.byType(LikeRequestPage), findsOneWidget);
+
+    when(mockFireStoreService.checkConnectionStatus('0')).thenAnswer((_) async => Future.value(false));
+    await tester.tap(find.byKey(const Key('acceptBtn')));
+
+    await tester.tap(find.byKey(const Key('rejectBtn')));
   });
 
   test('ConnectionModel Test', () {

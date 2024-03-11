@@ -126,6 +126,7 @@ class LikeRequestPage extends StatelessWidget {
                     //mainAxisSize: MainAxisSize.min,
                     children: [
                       ElevatedButton(
+                        key: const Key('acceptBtn'),
                         onPressed: () async {
                           acceptOneRequest(context, doc);
                         },
@@ -137,6 +138,7 @@ class LikeRequestPage extends StatelessWidget {
                       ),
                       const SizedBox(width: 5,),
                       ElevatedButton(
+                        key: const Key('rejectBtn'),
                         onPressed: () async {
                           deleteOneRequest(context, doc.id);
                         },
