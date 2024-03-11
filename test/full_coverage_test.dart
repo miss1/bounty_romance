@@ -8,9 +8,11 @@ import 'package:bounty_romance/common/firebase_options.dart';
 import 'package:bounty_romance/common/router.dart';
 import 'package:bounty_romance/common/nav_notifier.dart';
 import 'package:bounty_romance/edit_profile_page.dart';
+import 'package:bounty_romance/like_request_page.dart';
 import 'package:bounty_romance/message_list_page.dart';
 import 'package:bounty_romance/message_page.dart';
 import 'package:bounty_romance/widget_profile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -34,7 +36,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'full_coverage_test.mocks.dart';
 
 // Mock Firebase
-@GenerateMocks([FireStoreService])
+@GenerateMocks([FireStoreService, DocumentSnapshot])
 
 class MockGoRouter extends Mock {
   void push(String route, {String extra});
@@ -58,6 +60,7 @@ UserInfoModel getMockUserInfo () {
 void main() {
   // Create a mock FirebaseAuth instance
   final FireStoreService mockFireStoreService = MockFireStoreService();
+  final DocumentSnapshot mockDocumentSnapshot = MockDocumentSnapshot();
   MockGoRouter mockGoRouter;
 
   testWidgets('login page: tap clear icon', (WidgetTester tester) async {
@@ -218,6 +221,22 @@ void main() {
     expect(userInfoMap['gender'], 0);
     expect(userInfoMap['avatar'], '');
     expect(userInfoMap['city'], '');
+  });
+
+  test('UserInfoModel Test with DocumentSnapshot', () {
+    // test fromSnapshot function
+    Map<String, dynamic> mockSnapshotData = {
+      'id': '0',
+      'name': 'John Doe',
+      'email': 'test2@gmail.com',
+      'age': '18',
+      'intro': 'haha',
+      'gender': 0
+    };
+    when(mockDocumentSnapshot.data()).thenAnswer((_) => mockSnapshotData);
+    UserInfoModel snapUserInfo = UserInfoModel.fromSnapshot(mockDocumentSnapshot);
+    expect(snapUserInfo.id, '0');
+    expect(snapUserInfo.name, 'John Doe');
   });
 
   // test all profile page widget
@@ -478,5 +497,58 @@ void main() {
     await tester.pump(Duration.zero);
 
     expect(find.byType(MessageListPage), findsOneWidget);
+  });
+
+  testWidgets('Like request page', (WidgetTester tester) async {
+
+    when(mockFireStoreService.getUserNameById('0')).thenAnswer((_) async => Future.value('test'));
+    when(mockFireStoreService.getUserAvatarById('0')).thenAnswer((_) async => Future.value(''));
+    when(mockFireStoreService.getLikeRequests()).thenAnswer((_) => Stream.value([getMockUserInfo()]));
+
+    await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (context) => NavNotifier(),
+            ),
+            Provider(create: (context) => mockFireStoreService),
+          ],
+          child: const MaterialApp(
+            home: LikeRequestPage(),
+          ),
+        )
+    );
+
+    await tester.pumpAndSettle();
+    await tester.pump(Duration.zero);
+
+    expect(find.byType(LikeRequestPage), findsOneWidget);
+  });
+
+  test('ConnectionModel Test', () {
+    Map<String, dynamic> mockSnapshotData = {
+      'id': '0',
+      'name': 'John Doe',
+      'avatar': '',
+      'msgId': '123'
+    };
+    when(mockDocumentSnapshot.data()).thenAnswer((_) => mockSnapshotData);
+    ConnectionModel snapConnectionInfo = ConnectionModel.fromSnapshot(mockDocumentSnapshot);
+    expect(snapConnectionInfo.id, '0');
+    expect(snapConnectionInfo.name, 'John Doe');
+  });
+
+  test('MessageModel Test', () {
+    Map<String, dynamic> mockSnapshotData = {
+      'senderId': '0',
+      'senderName': 'John Doe',
+      'senderAvatar': '',
+      'msg': 'Hi',
+      'time': 0
+    };
+    when(mockDocumentSnapshot.data()).thenAnswer((_) => mockSnapshotData);
+    MessageModel snapMessageInfo = MessageModel.fromSnapshot(mockDocumentSnapshot);
+    expect(snapMessageInfo.senderId, '0');
+    expect(snapMessageInfo.senderName, 'John Doe');
   });
 }
